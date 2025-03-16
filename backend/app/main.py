@@ -1,17 +1,14 @@
 import os
 
-import openai
 import uvicorn
+from api.routers import route
 from database import engine
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from models import profile
 
-from backend.app.api.routers import route
-
 _ = load_dotenv(find_dotenv())  # read local .env file
-openai.api_key = os.environ["OPENAI_API_KEY"]
 
 
 def create_tables():
