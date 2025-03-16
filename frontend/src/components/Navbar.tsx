@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useAuth } from '@/context/AuthContext';
-import Link from 'next/link';
-import { LogOut, Menu } from 'lucide-react';
-import ThemeModeToggle from './ThemeModeToggle';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
+import { LogOut, Menu } from "lucide-react";
+import ThemeModeToggle from "./ThemeModeToggle";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,8 +14,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -31,9 +31,7 @@ const Navbar = () => {
       <div className="flex items-center justify-between w-full sm:w-auto">
         {!user && (
           <Link href="/">
-            <div className="text-2xl font-bold ml-4 sm:ml-16">
-              LLM App Template
-            </div>
+            <div className="text-2xl font-bold ml-4 sm:ml-16">Boilerplate</div>
           </Link>
         )}
         {!user && (
@@ -75,8 +73,8 @@ const Navbar = () => {
 
       <div
         className={cn(
-          'items-center space-x-4',
-          user ? 'flex' : 'hidden sm:flex'
+          "items-center space-x-4",
+          user ? "flex" : "hidden sm:flex"
         )}
       >
         {user ? (
