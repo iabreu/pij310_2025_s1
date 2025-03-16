@@ -1,7 +1,9 @@
-from sqlalchemy import Column, ForeignKey, String, DateTime, func
-from sqlalchemy.dialects.postgresql import UUID
-from app.database import Base
 import uuid
+
+from database import Base
+from sqlalchemy import Column, DateTime, ForeignKey, String, func
+from sqlalchemy.dialects.postgresql import UUID
+
 
 class Profile(Base):
     __tablename__ = "profiles"

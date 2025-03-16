@@ -1,18 +1,18 @@
 from datetime import datetime
 from uuid import UUID
 
-from app.database import get_db
-from app.dependencies import verify_jwt
-from app.models import ChatSession, Message
-from app.schemas.chat import (
+from database import get_db
+from dependencies import verify_jwt
+from fastapi import APIRouter, Depends, HTTPException
+from models import ChatSession, Message
+from schemas.chat import (
     ChatRequest,
     ChatResponse,
     ChatSessionResponse,
     MessageResponse,
     UpdateTitleRequest,
 )
-from app.services.chat_service import process_chat
-from fastapi import APIRouter, Depends, HTTPException
+from services.chat_service import process_chat
 from sqlalchemy.orm import Session
 
 router = APIRouter()
