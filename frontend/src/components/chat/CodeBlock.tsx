@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { Check, Copy, Download } from 'lucide-react';
-import { FC, memo } from 'react';
-import { Prism, SyntaxHighlighterProps } from 'react-syntax-highlighter';
+import { Check, Copy, Download } from "lucide-react";
+import { FC, memo } from "react";
+import { Prism, SyntaxHighlighterProps } from "react-syntax-highlighter";
 import {
   coldarkDark,
   coldarkCold,
-} from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { useTheme } from 'next-themes';
-import { useCopyToClipboard } from './hooks/useCopyToClipboard';
+} from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { useTheme } from "next-themes";
+import { useCopyToClipboard } from "./hooks/useCopyToClipboard";
 
 // TODO: Remove this when @type/react-syntax-highlighter is updated
 const SyntaxHighlighter = Prism as unknown as FC<SyntaxHighlighterProps>;
@@ -23,35 +23,35 @@ interface languageMap {
 }
 
 export const programmingLanguages: languageMap = {
-  javascript: '.js',
-  python: '.py',
-  java: '.java',
-  c: '.c',
-  cpp: '.cpp',
-  'c++': '.cpp',
-  'c#': '.cs',
-  ruby: '.rb',
-  php: '.php',
-  swift: '.swift',
-  'objective-c': '.m',
-  kotlin: '.kt',
-  typescript: '.ts',
-  go: '.go',
-  perl: '.pl',
-  rust: '.rs',
-  scala: '.scala',
-  haskell: '.hs',
-  lua: '.lua',
-  shell: '.sh',
-  sql: '.sql',
-  html: '.html',
-  css: '.css',
+  javascript: ".js",
+  python: ".py",
+  java: ".java",
+  c: ".c",
+  cpp: ".cpp",
+  "c++": ".cpp",
+  "c#": ".cs",
+  ruby: ".rb",
+  php: ".php",
+  swift: ".swift",
+  "objective-c": ".m",
+  kotlin: ".kt",
+  typescript: ".ts",
+  go: ".go",
+  perl: ".pl",
+  rust: ".rs",
+  scala: ".scala",
+  haskell: ".hs",
+  lua: ".lua",
+  shell: ".sh",
+  sql: ".sql",
+  html: ".html",
+  css: ".css",
   // add more file extensions here, make sure the key is same as language prop in CodeBlock.tsx component
 };
 
 export const generateRandomString = (length: number, lowercase = false) => {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXY3456789'; // excluding similar looking characters like Z, 2, I, 1, O, 0
-  let result = '';
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXY3456789"; // excluding similar looking characters like Z, 2, I, 1, O, 0
+  let result = "";
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
@@ -64,27 +64,28 @@ const CodeBlock: FC<Props> = memo(({ language, value }) => {
   const { theme } = useTheme();
 
   const downloadAsFile = () => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return;
     }
-    const fileExtension = programmingLanguages[language] || '.file';
+    const fileExtension = programmingLanguages[language] || ".file";
     const suggestedFileName = `file-${generateRandomString(
       3,
       true
     )}${fileExtension}`;
-    const fileName = window.prompt('Enter file name' || '', suggestedFileName);
+    // @ts-ignore
+    const fileName = window.prompt("Enter file name" || "", suggestedFileName);
 
     if (!fileName) {
       // User pressed cancel on prompt.
       return;
     }
 
-    const blob = new Blob([value], { type: 'text/plain' });
+    const blob = new Blob([value], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.download = fileName;
     link.href = url;
-    link.style.display = 'none';
+    link.style.display = "none";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -123,19 +124,19 @@ const CodeBlock: FC<Props> = memo(({ language, value }) => {
       </div>
       <SyntaxHighlighter
         language={language}
-        style={theme === 'dark' ? coldarkDark : coldarkCold}
+        style={theme === "dark" ? coldarkDark : coldarkCold}
         PreTag="div"
         showLineNumbers
         customStyle={{
-          width: '100%',
-          background: 'transparent',
-          padding: '1.5rem 1rem',
-          borderRadius: '0.5rem',
+          width: "100%",
+          background: "transparent",
+          padding: "1.5rem 1rem",
+          borderRadius: "0.5rem",
         }}
         codeTagProps={{
           style: {
-            fontSize: '0.9rem',
-            fontFamily: 'var(--font-mono)',
+            fontSize: "0.9rem",
+            fontFamily: "var(--font-mono)",
           },
         }}
       >
@@ -144,6 +145,6 @@ const CodeBlock: FC<Props> = memo(({ language, value }) => {
     </div>
   );
 });
-CodeBlock.displayName = 'CodeBlock';
+CodeBlock.displayName = "CodeBlock";
 
 export { CodeBlock };
