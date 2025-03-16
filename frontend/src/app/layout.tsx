@@ -1,23 +1,22 @@
-'use client';
+"use client";
 
-import { ThemeProvider } from '@/components/theme-provider';
-import { Inter } from 'next/font/google';
-import './globals.css';
-import Navbar from '@/components/Navbar';
-import Sidebar from '@/components/Sidebar';
-import { AuthProvider, useAuth } from '@/context/AuthContext';
-import { Loader2 } from 'lucide-react';
-import { Toaster } from '@/components/ui/toaster';
-import { ChatSessionProvider } from '@/context/ChatSessionContext';
-import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import { ThemeProvider } from "@/components/theme-provider";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import Navbar from "@/components/Navbar";
+import Sidebar from "@/components/Sidebar";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { Loader2 } from "lucide-react";
+import { Toaster } from "@/components/ui/toaster";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const { loading, user } = useAuth();
   const pathname = usePathname();
-  const shouldShowSidebarAndNavbar = !(pathname === '/' && !user);
+  const shouldShowSidebarAndNavbar = !(pathname === "/" && !user);
 
   if (loading) {
     return (
@@ -28,23 +27,21 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <ChatSessionProvider>
-      <div className="flex flex-grow h-screen">
-        {shouldShowSidebarAndNavbar && <Sidebar />}
-        <main className="flex flex-grow flex-col max-w-full">
-          {shouldShowSidebarAndNavbar && <Navbar />}
-          <div
-            className={cn(
-              shouldShowSidebarAndNavbar
-                ? 'min-h-[calc(100vh-72px)]'
-                : 'min-h-[100vh]'
-            )}
-          >
-            {children}
-          </div>
-        </main>
-      </div>
-    </ChatSessionProvider>
+    <div className="flex flex-grow h-screen">
+      {shouldShowSidebarAndNavbar && <Sidebar />}
+      <main className="flex flex-grow flex-col max-w-full">
+        {shouldShowSidebarAndNavbar && <Navbar />}
+        <div
+          className={cn(
+            shouldShowSidebarAndNavbar
+              ? "min-h-[calc(100vh-72px)]"
+              : "min-h-[100vh]"
+          )}
+        >
+          {children}
+        </div>
+      </main>
+    </div>
   );
 }
 
