@@ -7,7 +7,7 @@ from database import engine
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from models import chat_session, message, profile
+from models import profile
 
 _ = load_dotenv(find_dotenv())  # read local .env file
 openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -15,15 +15,13 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 
 def create_tables():
     profile.Base.metadata.create_all(bind=engine)
-    chat_session.Base.metadata.create_all(bind=engine)
-    message.Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Adjust this for production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
