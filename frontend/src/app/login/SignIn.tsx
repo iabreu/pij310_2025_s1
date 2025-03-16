@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createClient } from '@/utils/supabase/client';
-import { useRouter } from 'next/navigation';
-import OAuthButton from '@/components/OAuthButton';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
+import OAuthButton from "@/components/OAuthButton";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Form,
   FormField,
@@ -15,14 +15,14 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const schema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address.' }),
+  email: z.string().email({ message: "Please enter a valid email address." }),
   password: z
     .string()
-    .min(8, { message: 'Password must be at least 8 characters long.' }),
+    .min(8, { message: "Password must be at least 8 characters long." }),
 });
 
 type FormFields = z.infer<typeof schema>;
@@ -42,24 +42,24 @@ const SignIn = () => {
     });
 
     if (error) {
-      form.setError('root', {
-        message: 'Could not authenticate user!',
+      form.setError("root", {
+        message: "Could not authenticate user!",
       });
     } else {
-      router.push('/');
+      router.push("/");
     }
   };
 
   const handleOAuthSignin = async (
-    provider: 'google' | 'facebook' | 'github'
+    provider: "google" | "facebook" | "github"
   ) => {
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
     });
     if (error) {
-      form.setError('root', {
-        message: 'Could not authenticate user!',
+      form.setError("root", {
+        message: "Could not authenticate user!",
       });
     }
   };
@@ -80,7 +80,7 @@ const SignIn = () => {
                     placeholder="Email"
                     type="text"
                     {...field}
-                    value={field.value || ''}
+                    value={field.value || ""}
                   />
                 </FormControl>
                 <FormMessage />
@@ -98,7 +98,7 @@ const SignIn = () => {
                     placeholder="Password"
                     type="password"
                     {...field}
-                    value={field.value || ''}
+                    value={field.value || ""}
                   />
                 </FormControl>
                 <FormMessage />
@@ -110,13 +110,8 @@ const SignIn = () => {
             disabled={form.formState.isSubmitting}
             className="w-full"
           >
-            {form.formState.isSubmitting ? 'Loading...' : 'Sign In'}
+            {form.formState.isSubmitting ? "Loading..." : "Sign In"}
           </Button>
-          <OAuthButton
-            provider="google"
-            buttonText="Sign In with Google"
-            onClick={() => handleOAuthSignin('google')}
-          />
 
           {form.formState.errors.root && (
             <FormMessage className="mt-2">
