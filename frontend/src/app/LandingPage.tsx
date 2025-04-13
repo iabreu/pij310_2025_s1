@@ -8,13 +8,6 @@ export default function LandingPage() {
   const router = useRouter();
   const { user } = useAuth();
 
-  // If user is already logged in, redirect to dashboard
-  useEffect(() => {
-    if (user) {
-      router.push("/dashboard");
-    }
-  }, [user, router]);
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-100 to-neutral-300 dark:from-neutral-900 dark:to-neutral-800 text-neutral-900 dark:text-neutral-100 flex flex-col items-center">
       <main className="container mx-auto flex flex-col lg:flex-row items-center justify-center text-center flex-1 px-4 md:px-8">
@@ -30,20 +23,31 @@ export default function LandingPage() {
         </div>
 
         <div className="w-full max-w-md space-y-4">
-          <Button
-            className="w-full py-6 text-xl text-white bg-purple-600 hover:bg-purple-700"
-            onClick={() => router.push("/login")}
-          >
-            ENTRAR
-          </Button>
+          {!user ? (
+            <>
+              <Button
+                className="w-full py-6 text-xl text-white bg-purple-600 hover:bg-purple-700"
+                onClick={() => router.push("/login")}
+              >
+                ENTRAR
+              </Button>
 
-          <Button
-            variant="outline"
-            className="w-full py-6 text-xl border-purple-600 text-purple-600 hover:bg-purple-50 dark:border-purple-400 dark:text-purple-400 dark:hover:bg-purple-900/20"
-            onClick={() => router.push("/signup")}
-          >
-            CADASTRE-SE
-          </Button>
+              <Button
+                variant="outline"
+                className="w-full py-6 text-xl border-purple-600 text-purple-600 hover:bg-purple-50 dark:border-purple-400 dark:text-purple-400 dark:hover:bg-purple-900/20"
+                onClick={() => router.push("/signup")}
+              >
+                CADASTRE-SE
+              </Button>
+            </>
+          ) : (
+            <Button
+              className="w-full py-6 text-xl text-white bg-purple-600 hover:bg-purple-700"
+              onClick={() => router.push("/home")}
+            >
+              IR PARA A HOME
+            </Button>
+          )}
         </div>
       </main>
     </div>

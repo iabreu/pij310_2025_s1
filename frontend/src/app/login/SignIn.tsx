@@ -28,6 +28,8 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Por favor, insira um e-mail válido." }),
@@ -88,7 +90,7 @@ const SignIn = () => {
         });
       }
     } else {
-      router.push("/dashboard");
+      window.location.href = "/home";
     }
   };
 

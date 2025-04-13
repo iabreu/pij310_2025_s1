@@ -71,7 +71,7 @@ const ResetPasswordPage = () => {
         });
 
         // Redirect immediately to dashboard
-        router.push("/dashboard");
+        router.push("/home");
       }
     } catch (err) {
       console.error(err);

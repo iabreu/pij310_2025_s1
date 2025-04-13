@@ -90,7 +90,9 @@ const SignUp = () => {
             "Bem-vindo ao sistema de monitoramento de tratamento da sífilis",
           duration: 5000,
         });
-        router.push("/dashboard");
+        setTimeout(() => {
+          router.push("/home");
+        }, 1500);
       }
     } catch (err) {
       console.error("Error during signup process:", err);
