@@ -1,37 +1,49 @@
-import Image from "next/image";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import ThemeModeToggle from "@/components/ThemeModeToggle";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LandingPage() {
   const router = useRouter();
+  const { user } = useAuth();
+
+  // If user is already logged in, redirect to dashboard
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user, router]);
 
   return (
-    <div className="bg-gradient-to-b from-neutral-100 to-neutral-300 dark:from-neutral-900 dark:to-neutral-800 text-neutral-900 dark:text-neutral-100 overflow-y-none">
-      <header className="w-full py-4 px-4 md:px-6 bg-transparent">
-        <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
-          <h1 className="text-xl md:text-3xl font-bold">Boilerplate</h1>
-          <ThemeModeToggle />
+    <div className="min-h-screen bg-gradient-to-b from-neutral-100 to-neutral-300 dark:from-neutral-900 dark:to-neutral-800 text-neutral-900 dark:text-neutral-100 flex flex-col items-center">
+      <main className="container mx-auto flex flex-col lg:flex-row items-center justify-center text-center flex-1 px-4 md:px-8">
+        <div className="max-w-3xl mx-auto mb-12 lg:mb-0 lg:mr-12">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Sistema de acompanhamento de tratamento da Sífilis
+          </h2>
+          <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
+            Plataforma para monitoramento e acompanhamento do tratamento de
+            pacientes com sífilis, facilitando o controle médico e adesão ao
+            tratamento.
+          </p>
         </div>
-      </header>
 
-      <main className="container mx-auto flex flex-col lg:flex-row lg:space-x-8 items-center justify-center text-left min-h-[calc(100vh-72px)] overflow-y-auto pb-8 px-4 md:px-8">
-        <div className="flex-1 space-y-6 w-full lg:max-w-lg px-4 pt-2">
-          <div className="flex flex-col space-y-4 mt-4">
-            <Button
-              className="md:text-lg py-4 md:py-6 bg-blue-500 hover:bg-blue-600 text-neutral-100 dark:bg-blue-500 hover:dark:bg-blue-400 dark:text-neutral-100"
-              onClick={() => router.push("/signup")}
-            >
-              Get Started
-            </Button>
-            <Button
-              variant="outline"
-              className="md:text-lg py-4 md:py-6 dark:bg-neutral-900 text-blue-500 hover:bg-blue-500 hover:text-white dark:text-blue-400 dark:hover:bg-blue-500 dark:hover:text-neutral-100"
-              onClick={() => router.push("/login")}
-            >
-              Log In
-            </Button>
-          </div>
+        <div className="w-full max-w-md space-y-4">
+          <Button
+            className="w-full py-6 text-xl text-white bg-purple-600 hover:bg-purple-700"
+            onClick={() => router.push("/login")}
+          >
+            ENTRAR
+          </Button>
+
+          <Button
+            variant="outline"
+            className="w-full py-6 text-xl border-purple-600 text-purple-600 hover:bg-purple-50 dark:border-purple-400 dark:text-purple-400 dark:hover:bg-purple-900/20"
+            onClick={() => router.push("/signup")}
+          >
+            CADASTRE-SE
+          </Button>
         </div>
       </main>
     </div>

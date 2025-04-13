@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext';
-import SignIn from './SignIn';
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import SignIn from "./SignIn";
 
 const SignInPage = () => {
   const { user } = useAuth();
@@ -11,15 +11,11 @@ const SignInPage = () => {
 
   useEffect(() => {
     if (user) {
-      router.push('/');
+      router.push("/");
     }
   }, [user, router]);
 
-  return (
-    <div className="flex items-center justify-center h-full">
-      <SignIn />
-    </div>
-  );
+  return <SignIn />;
 };
 
 export default SignInPage;

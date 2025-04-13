@@ -3,7 +3,7 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+
 import Sidebar from "@/components/Sidebar";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { Loader2 } from "lucide-react";
@@ -30,7 +30,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     <div className="flex flex-grow h-screen">
       {shouldShowSidebarAndNavbar && <Sidebar />}
       <main className="flex flex-grow flex-col max-w-full">
-        {shouldShowSidebarAndNavbar && <Navbar />}
+        {shouldShowSidebarAndNavbar}
         <div
           className={cn(
             shouldShowSidebarAndNavbar
