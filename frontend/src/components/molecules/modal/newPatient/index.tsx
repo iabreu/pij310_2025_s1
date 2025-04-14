@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import NewPatientForm from "./form";
+import { patientService } from "@/services/api";
 
 type ModalProps = {
   newPatientModal: boolean;
@@ -30,7 +31,8 @@ const NewPatient = ({ newPatientModal: open, setNewPatientModal: onOpenChange }:
           <NewPatientForm onSubmit={(data) => {
             // aqui você chama sua API ou service
             console.log("Paciente:", data);
-            // setOpen(false);
+            patientService.createPatient(data)
+            onOpenChange(false);
           }} />
         </div>
 
