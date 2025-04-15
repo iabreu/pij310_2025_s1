@@ -4,10 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
-  DialogClose,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import NewPatientForm from "./form";
 import { patientService } from "@/services/api";
 
@@ -29,19 +26,10 @@ const NewPatient = ({ newPatientModal: open, setNewPatientModal: onOpenChange }:
 
         <div className="space-y-2">
           <NewPatientForm onSubmit={(data) => {
-            // aqui você chama sua API ou service
-            console.log("Paciente:", data);
             patientService.createPatient(data)
             onOpenChange(false);
           }} />
         </div>
-
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Cancelar</Button>
-          </DialogClose>
-          <Button type="submit">Salvar</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

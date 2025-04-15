@@ -9,10 +9,12 @@ import { Card, Spinner, Table } from "@/components";
 import { patientService } from '@/services/api'
 
 import { Patient } from "@/services/api";
+import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [isError, setIsError] = useState<boolean>(false)
+  const [isLoadingtable, setIsLoadingtable] = useState(false);
 
   const { user, loading: isLoading } = useAuth();
   const router = useRouter();
@@ -23,12 +25,22 @@ export default function HomePage() {
     }
   }, [user, isLoading, router]);
 
-  useEffect(() => {
-    setLoading(true)
+  const getPatients = async () => {
+    setIsLoadingtable(true)
+    setIsError(false)
     patientService.getPatients()
-      .then(data => setPatients(data))
-      .catch(err => console.error(err))
-      .finally(() => setLoading(false));
+      .then(data => {
+        setPatients(data)
+      })
+      .catch(err => {
+        setIsError(true)
+        console.error(err)
+      })
+      .finally(() => setIsLoadingtable(false));
+  }
+
+  useEffect(() => {
+    getPatients()
   }, [])
 
   if (isLoading) {
@@ -62,14 +74,20 @@ export default function HomePage() {
 
       {/* Recent Activities Section */}
       <section className="mb-10">
-        {loading ?
-          <Spinner />
+        {isLoadingtable ?
+          isError ?
+            <Button variant="outline" size="sm" className="text-sm" onClick={() => getPatients()}>
+              Recarregar
+            </Button>
+            :
+            <Spinner />
           :
           <Table
             title="Atividades recentes"
             columns={['Paciente', 'Data', 'Status', 'Ação']}
             rows={patients}
-          />}
+          />
+        }
       </section>
 
       {/* Graph section */}

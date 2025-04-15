@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 type NewPatientFormProps = {
   onSubmit: (data: NewPatientData) => void;
@@ -93,7 +94,14 @@ const NewPatientForm = ({ onSubmit }: NewPatientFormProps) => {
         />
       </div>
 
-      <Button type="submit">Salvar</Button>
+      <div className="flex flex-row-reverse w-full gap-2 ">
+        <Button type="submit">Salvar</Button>
+
+        <DialogClose asChild>
+          <Button variant="outline">Cancelar</Button>
+        </DialogClose>
+      </div>
+
     </form>
   );
 };

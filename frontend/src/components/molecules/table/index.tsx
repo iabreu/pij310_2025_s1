@@ -4,6 +4,7 @@ import { Patient } from "@/services/api"
 import { PlusIcon } from 'lucide-react'
 import { useState } from "react"
 import Modal from "../modal"
+import { DropdownMenu } from "@/components"
 
 type TableProps = {
   title: string
@@ -11,7 +12,9 @@ type TableProps = {
   rows: Patient[]
 }
 const Table = ({ title, columns, rows }: TableProps) => {
-  const [newPatientModal, setNewPatientModal] = useState(false)
+  const [newPatientModal, setNewPatientModal] = useState<boolean>(false)
+
+  const [openOptionMOdal, setOptionMOdal] = useState<boolean>(false)
 
   return (
     <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-md">
@@ -46,13 +49,20 @@ const Table = ({ title, columns, rows }: TableProps) => {
               {rows.length > 0 ? rows.map((row, index) => (
                 <Row
                   name={row.name}
-                  actions={'Ações'}
                   nick={row.id}
                   status={row.taxpayer_number}
                   time={row.diagnosis_date}
                   key={index}
                 />
-              )) : 'Não há dados'}
+              )) :
+                <tr
+                  className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-neutral-700/10"
+                >
+                  <td className="py-3 px-4 w-auto">
+                    <span>Sem dados</span>
+                  </td>
+                </tr>
+              }
             </tbody>
           </table>
         </div>

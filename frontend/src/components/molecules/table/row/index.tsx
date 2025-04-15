@@ -1,3 +1,4 @@
+import { DropdownMenu } from "@/components"
 import { Button } from "@/components/ui/button"
 import { useMemo } from "react"
 
@@ -6,9 +7,8 @@ type RowProps = {
   name: string
   time?: string | null | undefined
   status: string
-  actions: string
 }
-const Row = ({ nick, name, time, status, actions }: RowProps) => {
+const Row = ({ nick, name, time, status }: RowProps) => {
   const statusColor = (status: string) => {
     switch (status) {
       case 'Tratamento concluido':
@@ -72,10 +72,10 @@ const Row = ({ nick, name, time, status, actions }: RowProps) => {
       </td>
       <td className="py-3 px-4">
         <Button variant="ghost" size="sm" className="text-sm">
-          {actions}
+          <DropdownMenu row={1} />
         </Button>
       </td>
-    </tr >
+    </tr>
   )
 }
 
