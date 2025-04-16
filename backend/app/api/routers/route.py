@@ -1,3 +1,4 @@
+import logging
 from datetime import date, timedelta
 from typing import List, Optional
 
@@ -14,7 +15,12 @@ from models import (
     TreatmentStatus,
 )
 from sqlalchemy import and_, desc, func, or_
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Routers
 patient_router = APIRouter(prefix="/patients", tags=["patients"])
@@ -28,30 +34,56 @@ followup_router = APIRouter(prefix="/followups", tags=["follow-up tests"])
     "/", response_model=schemas.Patient, status_code=status.HTTP_201_CREATED
 )
 def create_patient(patient: schemas.PatientCreate, db: Session = Depends(get_db)):
-    # Check if patient with same MRN already exists
-    db_patient = (
-        db.query(Patient)
-        .filter(Patient.medical_record_number == patient.medical_record_number)
-        .first()
-    )
-    if db_patient:
+    try:
+        # Check if patient with same MRN already exists
+        db_patient = (
+            db.query(Patient)
+            .filter(Patient.medical_record_number == patient.medical_record_number)
+            .first()
+        )
+        if db_patient:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Patient with medical record number {patient.medical_record_number} already exists",
+            )
+
+        # Create new patient
+        db_patient = Patient(
+            medical_record_number=patient.medical_record_number,
+            name=patient.name,
+            date_of_birth=patient.date_of_birth,
+            diagnosis_date=patient.diagnosis_date,
+            taxpayer_number=patient.taxpayer_number,
+        )
+        db.add(db_patient)
+        db.commit()
+        db.refresh(db_patient)
+        return db_patient
+    except IntegrityError as e:
+        db.rollback()
+        logger.error(f"Integrity error when creating patient: {str(e)}")
+        if "unique constraint" in str(e).lower():
+            if "taxpayer_number" in str(e).lower():
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Patient with taxpayer number {patient.taxpayer_number} already exists"
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Unique constraint violation when creating patient"
+                )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Patient with medical record number {patient.medical_record_number} already exists",
+            detail=f"Database integrity error when creating patient: {str(e)}"
         )
-
-    # Create new patient
-    db_patient = Patient(
-        medical_record_number=patient.medical_record_number,
-        name=patient.name,
-        date_of_birth=patient.date_of_birth,
-        diagnosis_date=patient.diagnosis_date,
-        taxpayer_number=patient.taxpayer_number,
-    )
-    db.add(db_patient)
-    db.commit()
-    db.refresh(db_patient)
-    return db_patient
+    except SQLAlchemyError as e:
+        db.rollback()
+        logger.error(f"Database error when creating patient: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Database error occurred when creating patient. Error: {str(e)}"
+        )
 
 
 @patient_router.get("/", response_model=List[schemas.Patient])
@@ -64,70 +96,114 @@ def read_patients(
     """
     Get all patients with optional search by name or medical record number
     """
-    query = db.query(Patient)
+    try:
+        query = db.query(Patient)
 
-    if search:
-        query = query.filter(
-            or_(
-                Patient.name.ilike(f"%{search}%"),
-                Patient.medical_record_number.ilike(f"%{search}%"),
+        if search:
+            query = query.filter(
+                or_(
+                    Patient.name.ilike(f"%{search}%"),
+                    Patient.medical_record_number.ilike(f"%{search}%"),
+                )
             )
-        )
 
-    return query.offset(skip).limit(limit).all()
+        return query.offset(skip).limit(limit).all()
+    except SQLAlchemyError as e:
+        logger.error(f"Database error when retrieving patients: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Database error occurred when retrieving patients. Please try again later."
+        )
 
 
 @patient_router.get("/{patient_id}", response_model=schemas.PatientDetail)
 def read_patient(patient_id: int, db: Session = Depends(get_db)):
-    db_patient = db.query(Patient).filter(Patient.id == patient_id).first()
-    if db_patient is None:
-        db_patient = db.query(Patient).filter(Patient.taxpayer_number == f'{patient_id}').first()
-        if not db_patient:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Patient not found"
-            )
-    return db_patient
+    try:
+        db_patient = db.query(Patient).filter(Patient.id == patient_id).first()
+        if db_patient is None:
+            db_patient = db.query(Patient).filter(Patient.taxpayer_number == f'{patient_id}').first()
+            if not db_patient:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND, detail="Patient not found"
+                )
+        return db_patient
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid patient ID format: {str(e)}"
+        )
+    except SQLAlchemyError as e:
+        logger.error(f"Database error when retrieving patient {patient_id}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Database error occurred when retrieving patient. Please try again later."
+        )
 
 
 @patient_router.put("/{patient_id}", response_model=schemas.Patient)
 def update_patient(
     patient_id: int, patient: schemas.PatientCreate, db: Session = Depends(get_db)
 ):
-    db_patient = db.query(Patient).filter(Patient.id == patient_id).first()
-    if db_patient is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Patient not found"
-        )
-
-    # Check if updating to a MRN that already exists for another patient
-    existing_patient = (
-        db.query(Patient)
-        .filter(
-            and_(
-                Patient.medical_record_number == patient.medical_record_number,
-                Patient.id != patient_id,
+    try:
+        db_patient = db.query(Patient).filter(Patient.id == patient_id).first()
+        if db_patient is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Patient not found"
             )
-        )
-        .first()
-    )
 
-    if existing_patient:
+        # Check if updating to a MRN that already exists for another patient
+        existing_patient = (
+            db.query(Patient)
+            .filter(
+                and_(
+                    Patient.medical_record_number == patient.medical_record_number,
+                    Patient.id != patient_id,
+                )
+            )
+            .first()
+        )
+
+        if existing_patient:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Patient with medical record number {patient.medical_record_number} already exists",
+            )
+
+        # Update patient attributes
+        db_patient.medical_record_number = patient.medical_record_number
+        db_patient.name = patient.name
+        db_patient.date_of_birth = patient.date_of_birth
+        db_patient.diagnosis_date = patient.diagnosis_date
+        db_patient.taxpayer_number = patient.taxpayer_number
+
+        db.commit()
+        db.refresh(db_patient)
+        return db_patient
+    except IntegrityError as e:
+        db.rollback()
+        logger.error(f"Integrity error when updating patient {patient_id}: {str(e)}")
+        if "unique constraint" in str(e).lower():
+            if "taxpayer_number" in str(e).lower():
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Patient with taxpayer number {patient.taxpayer_number} already exists"
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Another patient with this information already exists"
+                )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Patient with medical record number {patient.medical_record_number} already exists",
+            detail="Database integrity error when updating patient"
         )
-
-    # Update patient attributes
-    db_patient.medical_record_number = patient.medical_record_number
-    db_patient.name = patient.name
-    db_patient.date_of_birth = patient.date_of_birth
-    db_patient.diagnosis_date = patient.diagnosis_date
-    db_patient.taxpayer_number = patient.taxpayer_number
-
-    db.commit()
-    db.refresh(db_patient)
-    return db_patient
-
+    except SQLAlchemyError as e:
+        db.rollback()
+        logger.error(f"Database error when updating patient {patient_id}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Database error occurred when updating patient. Please try again later."
+        )
 
 # Syphilis case endpoints
 @syphilis_case_router.post(
