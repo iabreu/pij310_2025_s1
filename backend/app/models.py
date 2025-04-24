@@ -73,7 +73,8 @@ class SyphilisCaseHistory(Base):
     patient_id = Column(Integer, ForeignKey("public.patients.id"), nullable=False, index=True)
     status = Column(
         Enum(TreatmentStatus), default=TreatmentStatus.ACTIVE_INFECTION, index=True
-    )  # Status Atual
+    ) 
+    titer_result = Column(String(100), index=True)
     diagnosis_date = Column(Date)
     # Treatment information stored as JSON
     treatments = Column(
