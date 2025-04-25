@@ -1,28 +1,33 @@
-import { Button } from "@/components/ui/button";
-import { DialogHeader } from "@/components/ui/dialog";
-import { patientService } from "@/services/api";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@radix-ui/react-dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@radix-ui/react-dropdown-menu";
 import { Edit, MoreVertical, Trash2 } from 'lucide-react'
 import { useState } from "react";
 import Modal from "../modal";
-
+import { useRouter } from "next/navigation";
 type ModalProps = {
-  row: number
+  id: number
 };
 
 
-const TableOption = ({ row }: ModalProps) => {
+const TableOption = ({ id }: ModalProps) => {
   const [isHandleLoading, setIshandleLoading] = useState<boolean>(false)
-  const [editPatientModal, setEditPatientModal] = useState<boolean>(false)
   const [deletePatientModal, setDeletePatientModal] = useState<boolean>(false)
+
+  const router = useRouter()
+
+  const handleEditClick = () => {
+    router.push(`/patient/${id}`);
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <MoreVertical className="h-4 w-4" />
-        </Button>
+        <MoreVertical className="h-4 w-4" />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
@@ -30,7 +35,7 @@ const TableOption = ({ row }: ModalProps) => {
         className="flex flex-col bg-zinc-700 rounded-md overflow-hidden shadow-md text-sm w-40"
       >
         <DropdownMenuItem
-          onClick={() => setEditPatientModal(true)}
+          onClick={handleEditClick}
           disabled={isHandleLoading}
           className="flex items-center gap-2 px-2 py-2 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
         >
@@ -46,15 +51,6 @@ const TableOption = ({ row }: ModalProps) => {
           Excluir
         </DropdownMenuItem>
       </DropdownMenuContent>
-      {
-        editPatientModal &&
-        <Modal.EditPatient
-          id={1}
-          editPatientModal={editPatientModal}
-          setEditPatientModal={setEditPatientModal}
-          setIshandleLoading={setIshandleLoading}
-        />
-      }
       {
         deletePatientModal &&
         <Modal.DeletePatient

@@ -1,31 +1,52 @@
 import { Button } from "@/components/ui/button"
-import Row from "./row"
-import { Patient } from "@/services/api"
+import { Patient, patientService } from "@/services/api"
 import { PlusIcon } from 'lucide-react'
 import { useState } from "react"
+import { Input } from "@/components/ui/input"
+
 import Modal from "../modal"
-import { DropdownMenu } from "@/components"
+import Row from "./row"
 
 type TableProps = {
   title: string
   columns: string[]
   rows: Patient[]
+  getPatients: () => void
 }
-const Table = ({ title, columns, rows }: TableProps) => {
+const Table = ({ title, columns, rows, getPatients }: TableProps) => {
   const [newPatientModal, setNewPatientModal] = useState<boolean>(false)
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [filteredPatients, setFilteredPatients] = useState<Patient[]>(rows)
 
-  const [openOptionMOdal, setOptionMOdal] = useState<boolean>(false)
+  const handleFilter = () => {
+    if (searchTerm === "") {
+      setFilteredPatients(rows) // Se não houver busca, mostra todos os pacientes
+    } else {
+      const filtered = rows.filter((patient) =>
+        patient.medical_record_number.toLowerCase().includes(searchTerm.toLowerCase()) // Filtra pelo prontuário
+      )
+      setFilteredPatients(filtered)
+    }
+  }
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value)
+    handleFilter() // Chama o filtro toda vez que o termo de busca mudar
+  }
 
   return (
     <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">{title}</h2>
         <div className="flex gap-2">
+          <Input type="string"
+            placeholder="Buscar por ID"
+            className="h-9 py-1"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
           <Button variant="outline" size="sm" className="text-sm" onClick={() => setNewPatientModal(true)}>
             <PlusIcon className="w-4 mr-1" />Novo paciente
-          </Button>
-          <Button variant="outline" size="sm" className="text-sm">
-            Ver Todas
           </Button>
         </div>
       </div>
@@ -46,15 +67,19 @@ const Table = ({ title, columns, rows }: TableProps) => {
               </tr>
             </thead>
             <tbody>
-              {rows.length > 0 ? rows.map((row, index) => (
-                <Row
-                  name={row.name}
-                  nick={row.id}
-                  status={row.taxpayer_number}
-                  time={row.diagnosis_date}
-                  key={index}
-                />
-              )) :
+              {filteredPatients.length > 0 ?
+                filteredPatients.map((row, index) => {
+                  const colors = ["bg-neutral-700/10", "bg-neutral-700/30"];
+                  const rowColor = colors[index % colors.length];
+                  return (
+                    <Row
+                      patientData={row}
+                      key={index}
+                      rowColor={rowColor}
+                    />
+                  )
+                })
+                :
                 <tr
                   className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-neutral-700/10"
                 >
@@ -67,7 +92,13 @@ const Table = ({ title, columns, rows }: TableProps) => {
           </table>
         </div>
       </div>
-      {newPatientModal ? <Modal.NewPatient newPatientModal={newPatientModal} setNewPatientModal={setNewPatientModal} /> : null}
+      {newPatientModal ?
+        <Modal.NewPatient
+          newPatientModal={newPatientModal}
+          setNewPatientModal={setNewPatientModal}
+          getPatients={getPatients}
+        />
+        : null}
     </div>
   )
 }

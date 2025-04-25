@@ -17,8 +17,7 @@ export default function PageLayout({
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-neutral-900">
       <Header title={title} subtitle={subtitle} />
-
-      <main className="container mx-auto px-4 md:px-6 py-8">{children}</main>
+      <main className="container flex h-[calc(100vh-84px)] my-auto p-8 md:px-6">{children}</main>
     </div>
   );
 }

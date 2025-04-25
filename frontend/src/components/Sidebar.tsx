@@ -1,23 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { useRouter, usePathname } from "next/navigation";
+import React, { useState } from "react";
 import {
-  PanelRightOpen,
   PanelRightClose,
-  CirclePlus,
-  Loader2,
-  AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const Sidebar: React.FC = () => {
-  const { user } = useAuth();
-  const router = useRouter();
-  const pathname = usePathname();
-
   const [isOpen, setIsOpen] = useState(true);
 
   return (

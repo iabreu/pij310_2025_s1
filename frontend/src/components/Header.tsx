@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import { LogOut, User } from "lucide-react";
+import { LogOut } from "lucide-react";
 
 interface HeaderProps {
   title?: string;
@@ -12,8 +11,7 @@ interface HeaderProps {
 }
 
 export default function Header({ title, subtitle }: HeaderProps) {
-  const { user, loading: isLoading, logout } = useAuth();
-  const router = useRouter();
+  const { user, logout } = useAuth();
   const [currentDate, setCurrentDate] = useState<string>("");
 
   useEffect(() => {
@@ -29,7 +27,7 @@ export default function Header({ title, subtitle }: HeaderProps) {
   }, []);
 
   return (
-    <header className="bg-white dark:bg-neutral-800 shadow-sm">
+    <header className="dark:bg-neutral-800 shadow-sm sticky">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div>
@@ -41,9 +39,6 @@ export default function Header({ title, subtitle }: HeaderProps) {
             </p>
           </div>
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <User className="h-5 w-5" />
-            </Button>
             <Button
               variant="outline"
               className="flex items-center gap-2"

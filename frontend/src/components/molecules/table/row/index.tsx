@@ -1,25 +1,14 @@
 import { DropdownMenu } from "@/components"
 import { Button } from "@/components/ui/button"
+import { Patient } from "@/services/api"
+import { statusColor } from "@/utils/functions"
 import { useMemo } from "react"
 
 type RowProps = {
-  nick: string | number
-  name: string
-  time?: string | null | undefined
-  status: string
+  patientData: Patient
+  rowColor: string
 }
-const Row = ({ nick, name, time, status }: RowProps) => {
-  const statusColor = (status: string) => {
-    switch (status) {
-      case 'Tratamento concluido':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-      case 'Em tratamento':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
-      case 'Novo caso':
-        return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-    }
-  }
-
+const Row = ({ patientData, rowColor }: RowProps) => {
   const colorVariants = [
     {
       bg: 'bg-red-100 dark:bg-red-900/30',
@@ -53,26 +42,34 @@ const Row = ({ nick, name, time, status }: RowProps) => {
   }, []);
 
   return (
-    <tr className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-neutral-700/10">
+    <tr className={`border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-neutral-700/10 ${rowColor}`}>
       <td className="py-3 px-4">
         <div className="flex items-center">
           <div className={`h-8 w-8 rounded-full flex items-center justify-center font-medium mr-3 ${color.bg} ${color.text}`} >
-            {nick}
+            {patientData.id}
           </div>
-          <span>{name}</span>
         </div>
       </td>
       <td className="py-3 px-4 text-gray-600 dark:text-gray-400">
-        {time}
+        {patientData.medical_record_number}
+      </td>
+      <td className="py-3 px-4 text-gray-600 dark:text-gray-400">
+        {patientData.first_exam_date}
+      </td>
+      <td className="py-3 px-4 text-gray-600 dark:text-gray-400">
+        {patientData.last_exam_date}
+      </td>
+      <td className="py-3 px-4 text-gray-600 dark:text-gray-400">
+        {patientData.last_case_date}
       </td>
       <td className="py-3 px-4">
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColor(status)}`} >
-          {status}
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColor(patientData.status)}`} >
+          {patientData.status}
         </span>
       </td>
       <td className="py-3 px-4">
         <Button variant="ghost" size="sm" className="text-sm">
-          <DropdownMenu row={1} />
+          <DropdownMenu id={patientData.id} />
         </Button>
       </td>
     </tr>

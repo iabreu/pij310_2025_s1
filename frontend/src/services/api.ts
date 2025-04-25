@@ -5,10 +5,10 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API || "";
 export type Patient = {
   id: number;
   medical_record_number: string;
-  name: string;
-  date_of_birth: string;
-  diagnosis_date: string | null;
-  taxpayer_number: string;
+  first_exam_date: string;
+  last_exam_date?: string;
+  last_case_date?: string;
+  status: string;
 };
 
 export type SyphilisCase = {
@@ -46,7 +46,7 @@ export const patientService = {
   // Get all patients
   getPatients: async (): Promise<Patient[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/patients`);
+      const response = await fetch(`${API_BASE_URL}/patients/`);
 
       // If 404, return empty array (no patients found)
       if (response.status === 404) {
@@ -79,9 +79,9 @@ export const patientService = {
   },
 
   // Create a new patient
-  createPatient: async (patientData: Omit<Patient, "id">): Promise<Patient> => {
+  createPatient: async (patientData: Omit<Patient, "medical_record_number">): Promise<Patient> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/patients`, {
+      const response = await fetch(`${API_BASE_URL}/patients/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

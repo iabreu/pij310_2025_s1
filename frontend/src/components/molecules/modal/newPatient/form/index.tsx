@@ -4,25 +4,44 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { DialogClose } from "@radix-ui/react-dialog";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 type NewPatientFormProps = {
   onSubmit: (data: NewPatientData) => void;
 };
 
 type NewPatientData = {
   medical_record_number: string;
-  name: string;
-  date_of_birth: string;
-  taxpayer_number: string;
-  diagnosis_date: string;
+  first_exam_date: string;
+  last_exam_date: string;
+  last_case_date: string;
+  status: string;
 };
+
+const statusOptions = [
+  { label: "Ativa", value: "Active Infection" },
+  { label: "Reinfecção", value: " Reinfection" },
+  { label: "Em tratamento", value: "Under Treatment" },
+  { label: "Treatment Complete", value: "Tratamento completo" },
+  { label: "Monitoring (Post-Treatment/Cure)", value: "Montirado (Pós-tratamento/Cura)" },
+  { label: "Curado", value: "Cured" },
+  { label: "Falha no tratamento", value: "Treatment Failure" },
+  { label: "Desconhecido", value: "Unknown" },
+];
 
 const NewPatientForm = ({ onSubmit }: NewPatientFormProps) => {
   const [formData, setFormData] = useState<NewPatientData>({
     medical_record_number: "",
-    name: "",
-    date_of_birth: "",
-    taxpayer_number: "",
-    diagnosis_date: "",
+    first_exam_date: '',
+    last_exam_date: '',
+    last_case_date: "",
+    status: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,49 +68,57 @@ const NewPatientForm = ({ onSubmit }: NewPatientFormProps) => {
       </div>
 
       <div>
-        <Label htmlFor="name">Nome</Label>
+        <Label htmlFor="first_exam_date">Data do diagnóstico</Label>
         <Input
-          id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="date_of_birth">Data de nascimento</Label>
-        <Input
-          id="date_of_birth"
-          name="date_of_birth"
+          id="first_exam_date"
+          name="first_exam_date"
           type="date"
-          value={formData.date_of_birth}
+          value={formData.first_exam_date}
           onChange={handleChange}
           required
         />
       </div>
 
       <div>
-        <Label htmlFor="taxpayer_number">CPF</Label>
+        <Label htmlFor="last_exam_date">Data do último diagnóstico</Label>
         <Input
-          id="taxpayer_number"
-          name="taxpayer_number"
-          value={formData.taxpayer_number}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="diagnosis_date">Data do diagnóstico</Label>
-        <Input
-          id="diagnosis_date"
-          name="diagnosis_date"
+          id="last_exam_date"
+          name="last_exam_date"
           type="date"
-          value={formData.diagnosis_date}
+          value={formData.last_exam_date}
           onChange={handleChange}
           required
         />
+      </div>
+
+      <div>
+        <Label htmlFor="last_case_date">Data do último caso</Label>
+        <Input
+          id="last_case_date"
+          name="last_case_date"
+          type="date"
+          value={formData.last_case_date}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="status">Status atual</Label>
+        <Select onValueChange={(value) => {
+          setFormData((prev) => ({ ...prev, status: value }));
+        }}>
+          <SelectTrigger>
+            <SelectValue placeholder="Estatus atual" />
+          </SelectTrigger>
+          <SelectContent>
+            {statusOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="flex flex-row-reverse w-full gap-2 ">

@@ -170,7 +170,7 @@ const ChatSessionsList: React.FC<ChatSessionsListProps> = ({
           className={cn(
             'hover:bg-neutral-200 hover:dark:bg-neutral-700 cursor-pointer',
             session.id === selectedSessionId &&
-              'bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700'
+            'bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700'
           )}
           onClick={() => handleSessionClick(session.id)}
         >
@@ -178,7 +178,7 @@ const ChatSessionsList: React.FC<ChatSessionsListProps> = ({
             {editingSessionId === session.id ? (
               <input
                 ref={renameInputRef}
-                className="flex-1 text-ellipsis whitespace-nowrap text-clip p-1 border-none focus:outline-neutral-200 focus:dark:outline-neutral-600"
+                className="flex-1 whitespace-nowrap text-clip p-1 border-none focus:outline-neutral-200 focus:dark:outline-neutral-600"
                 value={newTitle}
                 disabled={loading === session.id}
                 onChange={handleRenameInputChange}
@@ -192,7 +192,7 @@ const ChatSessionsList: React.FC<ChatSessionsListProps> = ({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-clip pr-2">
+                    <div className="flex-1 overflow-hidden whitespace-nowrap text-clip pr-2">
                       {session.title}
                     </div>
                   </TooltipTrigger>
