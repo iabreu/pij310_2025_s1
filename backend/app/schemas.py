@@ -1,8 +1,8 @@
 from datetime import date, datetime
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
-from models import SyphilisStage, TestResult, TreatmentStatus
-from pydantic import BaseModel, ConfigDict
+from models import TreatmentStatus
+from pydantic import BaseModel, Field
 
 
 class TunedModel(BaseModel):
@@ -12,75 +12,72 @@ class TunedModel(BaseModel):
 
 class PatientBase(TunedModel):
     medical_record_number: str
-    name: str
-    date_of_birth: date
-    taxpayer_number: str
     diagnosis_date: Optional[date] = None
+    status: Optional[TreatmentStatus] = None
 
 
 class PatientCreate(PatientBase):
     pass
 
 
+class PatientUpdate(TunedModel):
+    medical_record_number: Optional[str] = None
+    diagnosis_date: Optional[date] = None
+    status: Optional[TreatmentStatus] = None
+
+
 class Patient(PatientBase):
     id: int
 
 
-class SyphilisCaseBase(TunedModel):
+class PatientListResponse(BaseModel):
+    id: int
+    medical_record_number: str
+    first_exam_date: Optional[date] = None
+    last_exam_date: Optional[date] = None
+    last_case_date: Optional[date] = None
+    status: Optional[TreatmentStatus] = None
+
+    class Config:
+        orm_mode = True
+
+
+class SyphilisCaseHistoryBase(TunedModel):
     patient_id: int
     diagnosis_date: date
-    stage: SyphilisStage
-    initial_title: Optional[str] = None
-    treatment_status: TreatmentStatus = TreatmentStatus.ACTIVE_INFECTION
+    titer_result: str
+    status: TreatmentStatus
+    treatments: Optional[List[Dict[str, Any]]] = None
     notes: Optional[str] = None
 
 
-class SyphilisCaseCreate(SyphilisCaseBase):
+class SyphilisCaseHistoryCreate(SyphilisCaseHistoryBase):
     pass
 
 
-class SyphilisCase(SyphilisCaseBase):
+class SyphilisCaseHistoryUpdate(TunedModel):
+    patient_id: Optional[int] = None
+    diagnosis_date: Optional[date] = None
+    titer_result: Optional[str] = None
+    status: Optional[TreatmentStatus] = None
+    treatments: Optional[List[Dict[str, Any]]] = None
+    notes: Optional[str] = None
+
+
+class SyphilisCaseHistory(SyphilisCaseHistoryBase):
     id: int
-
-
-class TreatmentBase(TunedModel):
-    syphilis_case_id: int
-    medication: str
-    dosage: str
     created_at: datetime
-    notes: Optional[str] = None
+    updated_at: Optional[datetime] = None
 
 
-class TreatmentCreate(TreatmentBase):
+class SyphilisCaseHistoryDetail(SyphilisCaseHistory):
     pass
 
 
-class Treatment(TreatmentBase):
-    id: int
-
-
-class FollowUpTestBase(TunedModel):
-    patient_id: int
-    syphilis_case_id: int
-    test_date: date
-    test_type: str
-    result: TestResult
-    title: Optional[str] = None
-    notes: Optional[str] = None
-
-
-class FollowUpTestCreate(FollowUpTestBase):
-    pass
-
-
-class FollowUpTest(FollowUpTestBase):
-    id: int
-
-
-class SyphilisCaseDetail(SyphilisCase):
-    treatments: List[Treatment] = []
-    follow_up_tests: List[FollowUpTest] = []
-
-
-class PatientDetail(Patient):
-    syphilis_cases: List[SyphilisCase] = []
+class PatientDetailResponse(Patient):
+    syphilis_case_history: List[SyphilisCaseHistory] = Field(
+        default_factory=list, serialization_alias='case_histories'
+    )
+    
+    class Config:
+        orm_mode = True

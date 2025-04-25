@@ -1,10 +1,5 @@
 import uvicorn
-from api.routers.route import (
-    followup_router,
-    patient_router,
-    syphilis_case_router,
-    treatment_router,
-)
+from api.routers.route import case_history_router, patient_router
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -24,9 +19,7 @@ app.add_middleware(
 
 
 app.include_router(patient_router)
-app.include_router(syphilis_case_router)
-app.include_router(treatment_router)
-app.include_router(followup_router)
+app.include_router(case_history_router)
 
 
 if __name__ == "__main__":
