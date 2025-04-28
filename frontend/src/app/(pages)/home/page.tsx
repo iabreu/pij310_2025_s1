@@ -11,7 +11,7 @@ import { patientService } from '@/services/api'
 import { Patient } from "@/services/api";
 import { Button } from "@/components/ui/button";
 
-export default function HomePage() {
+const HomePage = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isError, setIsError] = useState<boolean>(false)
   const [isLoadingtable, setIsLoadingtable] = useState(false);
@@ -69,3 +69,5 @@ export default function HomePage() {
     </PageLayout >
   );
 }
+
+export default HomePage

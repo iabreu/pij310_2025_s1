@@ -30,8 +30,8 @@ const Table = ({ title, columns, rows, getPatients }: TableProps) => {
   }
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value)
-    handleFilter() // Chama o filtro toda vez que o termo de busca mudar
+    setSearchTerm(e.target.value.trim())
+    handleFilter()
   }
 
   return (

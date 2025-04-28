@@ -2,6 +2,26 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API || "";
 
 // Types based on backend schemas
+export type CaseHistoriesProps = {
+  patient_id: string
+  diagnosis_date: string
+  titer_result: string
+  status: string
+  treatments: string | null
+  notes: string
+  id: string
+  created_at: string
+  updated_at: string
+}
+
+export type PatientDataProps = {
+  medical_record_number: string
+  diagnosis_date: string
+  status: string
+  id: string
+  case_histories: CaseHistoriesProps[]
+}
+
 export type Patient = {
   id: number;
   medical_record_number: string;
@@ -65,7 +85,7 @@ export const patientService = {
   },
 
   // Get patient by ID
-  getPatient: async (id: number): Promise<Patient> => {
+  getPatient: async (id: number): Promise<PatientDataProps> => {
     try {
       const response = await fetch(`${API_BASE_URL}/patients/${id}`);
       if (!response.ok) {
