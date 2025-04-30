@@ -3,27 +3,27 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API || "";
 
 // Types based on backend schemas
 export type CaseHistoriesProps = {
-  patient_id: string
-  diagnosis_date: string
-  titer_result: string
-  status: string
-  treatments: string | null
-  notes: string
-  id: string
-  created_at: string
-  updated_at: string
-}
+  patient_id: string;
+  diagnosis_date: string;
+  titer_result: string;
+  status: string;
+  treatments: string | null;
+  notes: string;
+  id: string;
+  created_at: string;
+  updated_at: string;
+};
 
 export type PatientDataProps = {
-  medical_record_number: string
-  diagnosis_date: string
-  status: string
-  id: string
-  case_histories: CaseHistoriesProps[]
-}
+  medical_record_number: string;
+  diagnosis_date: string;
+  status: string;
+  id: string;
+  case_histories: CaseHistoriesProps[];
+};
 
 export type Patient = {
-  id: number;
+  id?: number;
   medical_record_number: string;
   first_exam_date: string;
   last_exam_date?: string;
@@ -99,7 +99,9 @@ export const patientService = {
   },
 
   // Create a new patient
-  createPatient: async (patientData: Omit<Patient, "medical_record_number">): Promise<Patient> => {
+  createPatient: async (
+    patientData: Omit<Patient, "medical_record_number">
+  ): Promise<Patient> => {
     try {
       const response = await fetch(`${API_BASE_URL}/patients/`, {
         method: "POST",
