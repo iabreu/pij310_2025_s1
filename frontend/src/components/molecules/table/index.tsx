@@ -20,10 +20,10 @@ const Table = ({ title, columns, rows, getPatients }: TableProps) => {
 
   const handleFilter = () => {
     if (searchTerm === "") {
-      setFilteredPatients(rows) // Se não houver busca, mostra todos os pacientes
+      setFilteredPatients(rows)
     } else {
       const filtered = rows.filter((patient) =>
-        patient.medical_record_number.toLowerCase().includes(searchTerm.toLowerCase()) // Filtra pelo prontuário
+        patient.medical_record_number.toLowerCase().includes(searchTerm.toLowerCase())
       )
       setFilteredPatients(filtered)
     }

@@ -27,10 +27,10 @@ export default function Header({ title, subtitle }: HeaderProps) {
   }, []);
 
   return (
-    <header className="dark:bg-neutral-800 shadow-sm sticky">
+    <header className="fixed top-0 left-0 right-0 dark:bg-neutral-800 shadow-sm w-full">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <div>
+          <div className="hidden md:block">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
               {title || `Bem-vindo, ${user?.email || "Usuário"}`}
             </h1>
@@ -38,7 +38,15 @@ export default function Header({ title, subtitle }: HeaderProps) {
               {subtitle || currentDate}
             </p>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="md:hidden">
+            <h1 className="text-base font-bold text-gray-900 dark:text-white">
+              {user?.email || "Usuário"}
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 text-xs capitalize">
+              {subtitle || currentDate}
+            </p>
+          </div>
+          <div className="flex items-center space-x-4 ml-auto">
             <Button
               variant="outline"
               className="flex items-center gap-2"

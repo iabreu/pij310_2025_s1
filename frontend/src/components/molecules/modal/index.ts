@@ -1,9 +1,11 @@
 import NewPatient from "./newPatient";
 import DeletePatient from './deletePatient'
+import EditPatientData from "./editPatient";
 
 const Modal = {
+  EditPatientData,
+  DeletePatient,
   NewPatient,
-  DeletePatient
 }
 
 export default Modal
