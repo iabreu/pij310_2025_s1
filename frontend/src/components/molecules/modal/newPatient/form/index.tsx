@@ -104,11 +104,11 @@ const NewPatientForm = ({ onSubmit }: NewPatientFormProps) => {
       </div>
 
       <div>
-        <Label htmlFor="status">Status atual</Label>
+        <Label htmlFor="status-select">Status atual</Label>
         <Select onValueChange={(value) => {
           setFormData((prev) => ({ ...prev, status: value }));
         }}>
-          <SelectTrigger>
+          <SelectTrigger id="status-select">
             <SelectValue placeholder="Estatus atual" />
           </SelectTrigger>
           <SelectContent>
@@ -128,7 +128,6 @@ const NewPatientForm = ({ onSubmit }: NewPatientFormProps) => {
           <Button variant="outline">Cancelar</Button>
         </DialogClose>
       </div>
-
     </form>
   );
 };
