@@ -61,6 +61,22 @@ export type FollowUpTest = {
   notes: string | null;
 };
 
+export type NewPatientData = {
+  medical_record_number: string;
+  first_exam_date: string;
+  last_exam_date: string;
+  last_case_date: string;
+  status: string;
+};
+
+export type SyphilisCaseProps = {
+  patient_id: string | string[],
+  titer_result: string,
+  diagnosis_date: string,
+  status: string
+}
+
+
 // API service for patients
 export const patientService = {
   // Get all patients
@@ -179,10 +195,10 @@ export const caseService = {
 
   // Create a new case
   createCase: async (
-    caseData: Omit<SyphilisCase, "id">
+    caseData: SyphilisCaseProps
   ): Promise<SyphilisCase> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/cases`, {
+      const response = await fetch(`${API_BASE_URL}/syphilis-case-history/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -202,7 +218,7 @@ export const caseService = {
   // Update a case
   updateCase: async (
     id: number,
-    caseData: Omit<SyphilisCase, "id">
+    caseData: SyphilisCaseProps
   ): Promise<SyphilisCase> => {
     try {
       const response = await fetch(`${API_BASE_URL}/cases/${id}`, {

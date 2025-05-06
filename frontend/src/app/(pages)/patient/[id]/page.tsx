@@ -8,11 +8,13 @@ import { number } from 'zod';
 import { statusColor } from '@/utils/functions';
 import { Button } from '@/components/ui/button';
 import ExameControl from './ControlExams';
+import { Edit, PlusSquare } from 'lucide-react';
 
 
 const PatientPage = () => {
-  const [isPatientLoading, setIsPatientiLoading] = useState<boolean>(false)
   const [patientData, setPatientData] = useState<PatientDataProps | null>(null)
+  const [handleOpenNewExam, setHandleOpenNewExam] = useState<boolean>(false)
+  const [isPatientLoading, setIsPatientiLoading] = useState<boolean>(false)
   const [handleOpenEdit, setHandleOpenEdit] = useState<boolean>(false)
   const params = useParams();
   const route = useRouter()
@@ -67,8 +69,9 @@ const PatientPage = () => {
     <PageLayout>
       <section className="w-full h-full">
         <Button variant={'ghost'} onClick={handleBackHome}>voltar</Button>
-        <div className='flex w-full h-ull py-4 text-right justify-center md:justify-end'>
-          <Button onClick={() => setHandleOpenEdit(true)} className='w-full md:w-auto'>Adicionar exame +</Button>
+        <div className='flex md:flex-row flex-col w-full h-ull py-4 text-right justify-center md:justify-end gap-4'>
+          <Button onClick={() => setHandleOpenNewExam(true)} className='w-full md:w-auto'><PlusSquare width={16} className='mr-2' />Adicionar exame</Button>
+          <Button onClick={() => setHandleOpenEdit(true)} className='w-full md:w-auto'><Edit width={16} className='mr-2' /> Editar</Button>
         </div>
         <section className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full h-auto">
           <div className="w-full flex flex-col">
@@ -109,6 +112,7 @@ const PatientPage = () => {
           <ExameControl patientData={patientData} />
         </section>
       </section >
+      {handleOpenNewExam && <Modal.NewExam onOpenChange={setHandleOpenNewExam} open={handleOpenNewExam} id={id} />}
       {handleOpenEdit && <Modal.EditPatientData onOpenChange={setHandleOpenEdit} open={handleOpenEdit} />}
     </PageLayout >
   );

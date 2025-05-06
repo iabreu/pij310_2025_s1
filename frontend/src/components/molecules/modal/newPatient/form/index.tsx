@@ -11,29 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { statusOptions } from "@/utils/statusList";
+import { NewPatientData } from "@/services/api";
 
 type NewPatientFormProps = {
   onSubmit: (data: NewPatientData) => void;
 };
-
-type NewPatientData = {
-  medical_record_number: string;
-  first_exam_date: string;
-  last_exam_date: string;
-  last_case_date: string;
-  status: string;
-};
-
-const statusOptions = [
-  { label: "Ativa", value: "Active Infection" },
-  { label: "Reinfecção", value: " Reinfection" },
-  { label: "Em tratamento", value: "Under Treatment" },
-  { label: "Treatment Complete", value: "Tratamento completo" },
-  { label: "Monitoring (Post-Treatment/Cure)", value: "Montirado (Pós-tratamento/Cura)" },
-  { label: "Curado", value: "Cured" },
-  { label: "Falha no tratamento", value: "Treatment Failure" },
-  { label: "Desconhecido", value: "Unknown" },
-];
 
 const NewPatientForm = ({ onSubmit }: NewPatientFormProps) => {
   const [formData, setFormData] = useState<NewPatientData>({
