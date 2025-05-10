@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState } from "react";
 import {
   Dialog,
@@ -6,33 +6,39 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogClose
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { statusOptions } from "@/utils/statusList";
 import { caseService, SyphilisCaseProps } from "@/services/api";
+import { titerOptions } from "@/utils/syphilisTiterValues ";
 
 type ModalProps = {
-  id: string | string[]
+  id: string;
   open: boolean;
+  refetch: Function;
   onOpenChange: (open: boolean) => void;
 };
 
-const NewExam = ({ open, onOpenChange, id }: ModalProps) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+const NewExam = ({ open, onOpenChange, id, refetch }: ModalProps) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<SyphilisCaseProps>({
-    patient_id: id || id[0],
-    titer_result: '',
-    diagnosis_date: '',
+    patient_id: id,
+    titer_result: "",
+    diagnosis_date: "",
     status: "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -40,27 +46,19 @@ const NewExam = ({ open, onOpenChange, id }: ModalProps) => {
     }));
   };
 
-  const titerOptions = [
-    '1:2',
-    '1:4',
-    '1:8',
-    '1:16',
-    '1:32',
-    '1:64',
-  ]
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      await caseService.createCase(formData)
-      onOpenChange(false)
+      await caseService.createCase(formData);
+      onOpenChange(false);
     } catch (error) {
       console.error("Erro ao criar caso:", error);
     } finally {
+      refetch();
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -139,12 +137,14 @@ const NewExam = ({ open, onOpenChange, id }: ModalProps) => {
             </Button>
 
             <DialogClose asChild>
-              <Button disabled={isLoading} variant="outline">Cancelar</Button>
+              <Button disabled={isLoading} variant="outline">
+                Cancelar
+              </Button>
             </DialogClose>
           </div>
         </form>
       </DialogContent>
-    </Dialog >
+    </Dialog>
   );
 };
 

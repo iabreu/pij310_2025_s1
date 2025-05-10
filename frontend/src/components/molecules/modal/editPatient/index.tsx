@@ -1,5 +1,5 @@
 "use client";
-import { ReactElement, useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,9 +9,6 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -19,32 +16,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { statusOptions } from "@/utils/statusList";
-import {
-  CaseHistoriesProps,
-  caseService,
-  PatientDataProps,
-} from "@/services/api";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { caseService, PatientDataProps } from "@/services/api";
+import { titerOptions } from "@/utils/syphilisTiterValues ";
 
 type ModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   patientData?: PatientDataProps | null | undefined;
+  refetch: Function;
 };
 
-const EditPatientData = ({ open, onOpenChange, patientData }: ModalProps) => {
+type EditExameProps = {
+  notes: string;
+  titer_result: string;
+};
+
+const EditPatientData = ({
+  open,
+  onOpenChange,
+  patientData,
+  refetch,
+}: ModalProps) => {
   const [selectExam, setSelectExam] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [formData, setFormData] = useState<CaseHistoriesProps>({
-    created_at: "",
-    diagnosis_date: "",
-    id: "",
+  const [formData, setFormData] = useState<EditExameProps>({
     notes: "",
-    patient_id: "",
     titer_result: "",
-    treatments: "",
-    updated_at: "",
-    status: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,33 +55,17 @@ const EditPatientData = ({ open, onOpenChange, patientData }: ModalProps) => {
     }));
   };
 
-  const handleSelectExam = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedExamId = parseInt(e.target.value);
-    setSelectExam(selectedExamId.toString());
+  const handleSelectExam = (value: string) => {
+    setSelectExam(value);
 
     const selectedExam = patientData?.case_histories.find(
-      (historie) => historie.id.toString() === selectedExamId.toString()
+      (historie) => historie.id.toString() == value
     );
 
     if (selectedExam) {
-      const now = new Date();
-      const options: Intl.DateTimeFormatOptions = {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      };
-
       setFormData({
-        id: selectedExam.id,
         notes: selectedExam.notes,
-        status: selectedExam.status,
-        patient_id: selectedExam.patient_id,
-        created_at: selectedExam.created_at,
-        treatments: selectedExam.treatments,
         titer_result: selectedExam.titer_result,
-        diagnosis_date: selectedExam.diagnosis_date,
-        updated_at: now.toLocaleDateString("pt-BR", options),
       });
     }
   };
@@ -91,12 +75,13 @@ const EditPatientData = ({ open, onOpenChange, patientData }: ModalProps) => {
     setIsLoading(true);
 
     try {
-      await caseService.updateCase(Number(formData.id), formData);
+      await caseService.updateCase(Number(selectExam), formData);
     } catch (err) {
       console.error(err);
     } finally {
       onOpenChange(false);
       setIsLoading(false);
+      refetch();
     }
   };
 
@@ -108,31 +93,26 @@ const EditPatientData = ({ open, onOpenChange, patientData }: ModalProps) => {
         </DialogHeader>
         {!selectExam ? (
           <div>
-            <DialogDescription>Selecione o exame:</DialogDescription>
+            <DialogDescription>
+              <Label htmlFor="exam">Selecione o exame:</Label>
+            </DialogDescription>
 
-            <select
-              name="exam"
-              id="exam"
-              className="my-2 p-2 rounded-md text-white"
-              onChange={handleSelectExam}
-              value={selectExam || ""}
+            <Select
+              value={selectExam}
+              defaultValue={formData.titer_result}
+              onValueChange={handleSelectExam}
             >
-              <option disabled value="" selected>
-                Selecionar exame
-              </option>
-
-              {patientData?.case_histories
-                .sort((a, b) => Number(a.id) - Number(b.id))
-                .map((historie, index: number) => (
-                  <option
-                    key={index}
-                    value={historie.id}
-                    className="hover:cursor-pointer"
-                  >
-                    Exame {historie.diagnosis_date}
-                  </option>
+              <SelectTrigger id="exam">
+                <SelectValue placeholder="Selecione" />
+              </SelectTrigger>
+              <SelectContent>
+                {patientData?.case_histories.map((option, index) => (
+                  <SelectItem key={index} value={option.id}>
+                    {option.diagnosis_date}
+                  </SelectItem>
                 ))}
-            </select>
+              </SelectContent>
+            </Select>
             <DialogFooter className="flex justify-end gap-2 pt-4">
               <DialogClose asChild>
                 <Button variant="outline">Cancelar</Button>
@@ -146,7 +126,7 @@ const EditPatientData = ({ open, onOpenChange, patientData }: ModalProps) => {
               <Input
                 id="notes"
                 name="notes"
-                value={formData.notes}
+                value={formData.notes || ""}
                 onChange={handleChange}
                 required
                 disabled={isLoading}
@@ -154,48 +134,24 @@ const EditPatientData = ({ open, onOpenChange, patientData }: ModalProps) => {
             </div>
 
             <div>
-              <Label htmlFor="titer_result">Resultado do Título</Label>
-              <Input
-                id="titer_result"
-                name="titer_result"
-                value={formData.titer_result}
-                onChange={handleChange}
-                required
-                disabled={isLoading}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="treatments">Tratamentos</Label>
-              <Input
-                id="treatments"
-                name="treatments"
-                value={formData.treatments || ""}
-                onChange={handleChange}
-                required
-                disabled={isLoading}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="status-select">Status atual</Label>
+              <Label htmlFor="status-select">Resultado do exame</Label>
               <Select
-                value={formData.status}
+                value={formData.titer_result}
+                defaultValue={formData.titer_result}
                 onValueChange={(value) =>
                   setFormData((prev) => ({
                     ...prev,
-                    status: value,
+                    titer_result: value,
                   }))
                 }
-                disabled={isLoading}
               >
                 <SelectTrigger id="status-select">
-                  <SelectValue placeholder="Estatus atual" />
+                  <SelectValue placeholder="Status atual" />
                 </SelectTrigger>
                 <SelectContent>
-                  {statusOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
+                  {titerOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
                     </SelectItem>
                   ))}
                 </SelectContent>

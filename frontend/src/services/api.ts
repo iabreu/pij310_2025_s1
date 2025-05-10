@@ -31,6 +31,11 @@ export type Patient = {
   status: string;
 };
 
+export type NewPatient = {
+  medical_record_number: string;
+  diagnosis_date: string;
+};
+
 export type SyphilisCase = {
   id: number;
   patient_id: number;
@@ -70,7 +75,7 @@ export type NewPatientData = {
 };
 
 export type SyphilisCaseProps = {
-  patient_id: string | string[];
+  patient_id: string;
   titer_result: string;
   diagnosis_date: string;
   status: string;
@@ -114,9 +119,7 @@ export const patientService = {
   },
 
   // Create a new patient
-  createPatient: async (
-    patientData: Omit<Patient, "medical_record_number">
-  ): Promise<Patient> => {
+  createPatient: async (patientData: NewPatient): Promise<PatientDataProps> => {
     try {
       const response = await fetch(`${API_BASE_URL}/patients/`, {
         method: "POST",
@@ -154,6 +157,30 @@ export const patientService = {
       return await response.json();
     } catch (error) {
       console.error(`Failed to update patient ${id}:`, error);
+      throw error;
+    }
+  },
+
+  deletePatient: async (id: number): Promise<any> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/patients/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Erro ao deletar paciente: ${response.status} ${response.statusText}`
+        );
+      }
+
+      // Algumas APIs retornam um body vazio no DELETE, então é bom verificar:
+      const data = await response.json().catch(() => null);
+      return data;
+    } catch (error) {
+      console.error("Erro ao excluir paciente:", error);
       throw error;
     }
   },
@@ -215,7 +242,7 @@ export const caseService = {
   // Update a case
   updateCase: async (
     id: number,
-    caseData: CaseHistoriesProps
+    caseData: { notes: string; titer_result: string }
   ): Promise<SyphilisCase> => {
     try {
       const response = await fetch(

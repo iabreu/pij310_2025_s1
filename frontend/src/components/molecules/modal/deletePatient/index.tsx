@@ -6,28 +6,39 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-  DialogClose
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { patientService } from "@/services/api";
+import { useState } from "react";
 
 type ModalProps = {
   id: number;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   setIshandleLoading: (loading: boolean) => void;
+  refetch: Function;
 };
 
-const DeletePatient = ({ open, onOpenChange, id, setIshandleLoading }: ModalProps) => {
+const DeletePatient = ({
+  id,
+  open,
+  refetch,
+  onOpenChange,
+  setIshandleLoading,
+}: ModalProps) => {
+  const [isLoading, setIsLoading] = useState(false);
   const handleDelete = async () => {
     try {
       setIshandleLoading(true);
-      // sua chamada de deletar aqui (ex: await deletePatient(id))
-      console.log(`Deletando paciente ${id}`);
-      onOpenChange(false);
+      setIsLoading(true);
+      await patientService.deletePatient(id);
     } catch (error) {
       console.error("Erro ao deletar paciente:", error);
     } finally {
       setIshandleLoading(false);
+      onOpenChange(false);
+      refetch();
     }
   };
 
@@ -37,15 +48,22 @@ const DeletePatient = ({ open, onOpenChange, id, setIshandleLoading }: ModalProp
         <DialogHeader>
           <DialogTitle>Excluir paciente</DialogTitle>
           <DialogDescription>
-            Tem certeza que deseja excluir este paciente? Essa ação não poderá ser desfeita.
+            Tem certeza que deseja excluir este paciente? Essa ação não poderá
+            ser desfeita.
           </DialogDescription>
         </DialogHeader>
 
         <DialogFooter className="flex justify-end gap-2 pt-4">
           <DialogClose asChild>
-            <Button variant="outline">Cancelar</Button>
+            <Button disabled={isLoading} variant="outline">
+              Cancelar
+            </Button>
           </DialogClose>
-          <Button variant="destructive" onClick={handleDelete}>
+          <Button
+            disabled={isLoading}
+            variant="destructive"
+            onClick={handleDelete}
+          >
             Excluir
           </Button>
         </DialogFooter>

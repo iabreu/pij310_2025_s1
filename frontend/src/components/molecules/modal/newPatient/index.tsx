@@ -11,10 +11,14 @@ import { patientService } from "@/services/api";
 type ModalProps = {
   newPatientModal: boolean;
   setNewPatientModal: (open: boolean) => void;
-  getPatients: () => void
+  getPatients: () => void;
 };
 
-const NewPatient = ({ newPatientModal: open, setNewPatientModal: onOpenChange, getPatients }: ModalProps) => {
+const NewPatient = ({
+  newPatientModal: open,
+  setNewPatientModal: onOpenChange,
+  getPatients,
+}: ModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -26,11 +30,13 @@ const NewPatient = ({ newPatientModal: open, setNewPatientModal: onOpenChange, g
         </DialogHeader>
 
         <div className="space-y-2">
-          <NewPatientForm onSubmit={(data) => {
-            patientService.createPatient(data)
-            getPatients()
-            onOpenChange(false);
-          }} />
+          <NewPatientForm
+            onSubmit={(data) => {
+              patientService.createPatient(data);
+              getPatients();
+              onOpenChange(false);
+            }}
+          />
         </div>
       </DialogContent>
     </Dialog>

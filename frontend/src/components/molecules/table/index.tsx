@@ -1,36 +1,38 @@
-import { Button } from "@/components/ui/button"
-import { Patient, patientService } from "@/services/api"
-import { PlusIcon } from 'lucide-react'
-import { useState } from "react"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { Patient, patientService } from "@/services/api";
+import { PlusIcon } from "lucide-react";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
 
-import Modal from "../modal"
-import Row from "./row"
+import Modal from "../modal";
+import Row from "./row";
 
 type TableProps = {
-  title: string
-  columns: string[]
-  rows: Patient[]
-  getPatients: () => void
-}
+  title: string;
+  columns: string[];
+  rows: Patient[];
+  getPatients: () => void;
+};
 const Table = ({ title, columns, rows, getPatients }: TableProps) => {
-  const [newPatientModal, setNewPatientModal] = useState<boolean>(false)
-  const [searchTerm, setSearchTerm] = useState<string>('')
-  const [filteredPatients, setFilteredPatients] = useState<Patient[]>(rows)
+  const [newPatientModal, setNewPatientModal] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [filteredPatients, setFilteredPatients] = useState<Patient[]>(rows);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.trim();
     setSearchTerm(value);
 
-    if (value === '') {
+    if (value === "") {
       setFilteredPatients(rows);
     } else {
       const filtered = rows.filter((patient) =>
-        patient.medical_record_number.toLowerCase().includes(value.toLowerCase())
+        patient.medical_record_number
+          .toLowerCase()
+          .includes(value.toLowerCase())
       );
       setFilteredPatients(filtered);
     }
-  }
+  };
 
   return (
     <div className="bg-white dark:bg-neutral-800 px-6 rounded-lg shadow-md max-h-[80vh] overflow-y-auto">
@@ -82,6 +84,7 @@ const Table = ({ title, columns, rows, getPatients }: TableProps) => {
                   key={index}
                   patientData={row}
                   rowColor={rowColor}
+                  refetch={getPatients}
                 />
               );
             })
@@ -103,8 +106,7 @@ const Table = ({ title, columns, rows, getPatients }: TableProps) => {
         />
       )}
     </div>
+  );
+};
 
-  )
-}
-
-export default Table
+export default Table;

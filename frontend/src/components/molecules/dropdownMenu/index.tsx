@@ -3,22 +3,23 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { Edit, MoreVertical, Trash2 } from 'lucide-react'
+import { Edit, MoreVertical, Trash2 } from "lucide-react";
 import { useState } from "react";
 import Modal from "../modal";
 import { useRouter } from "next/navigation";
+
 type ModalProps = {
-  id: number
+  id: number;
+  refetch: Function;
 };
 
+const TableOption = ({ id, refetch }: ModalProps) => {
+  const [isHandleLoading, setIshandleLoading] = useState<boolean>(false);
+  const [deletePatientModal, setDeletePatientModal] = useState<boolean>(false);
 
-const TableOption = ({ id }: ModalProps) => {
-  const [isHandleLoading, setIshandleLoading] = useState<boolean>(false)
-  const [deletePatientModal, setDeletePatientModal] = useState<boolean>(false)
-
-  const router = useRouter()
+  const router = useRouter();
 
   const handleEditClick = () => {
     router.push(`/patient/${id}`);
@@ -51,18 +52,17 @@ const TableOption = ({ id }: ModalProps) => {
           Excluir
         </DropdownMenuItem>
       </DropdownMenuContent>
-      {
-        deletePatientModal &&
+      {deletePatientModal && (
         <Modal.DeletePatient
-          id={1}
+          id={id}
           open={deletePatientModal}
           onOpenChange={setDeletePatientModal}
           setIshandleLoading={setIshandleLoading}
+          refetch={refetch}
         />
-
-      }
+      )}
     </DropdownMenu>
-  )
-}
+  );
+};
 
-export default TableOption
+export default TableOption;

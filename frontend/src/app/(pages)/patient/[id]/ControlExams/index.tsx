@@ -5,6 +5,8 @@ type ExameControlProps = {
 };
 
 const ExameControl = ({ patientData }: ExameControlProps) => {
+  const length = patientData?.case_histories?.length ?? 0;
+
   return (
     <div className="w-full flex flex-col text-center pb-10 md:pb-0 max-h-72 overflow-y-auto rounded-lg">
       {/* Título fixo no topo da div */}
@@ -22,18 +24,26 @@ const ExameControl = ({ patientData }: ExameControlProps) => {
           </tr>
         </thead>
         <tbody>
-          {patientData?.case_histories.map((historie, index: number) => {
-            const colors = ["bg-neutral-700/10", "bg-neutral-700/30"];
-            const rowColor = colors[index % colors.length];
+          {length > 0 ? (
+            patientData?.case_histories.map((historie, index: number) => {
+              const colors = ["bg-neutral-700/10", "bg-neutral-700/30"];
+              const rowColor = colors[index % colors.length];
 
-            return (
-              <tr key={index} className={`border-gray-100 ${rowColor}`}>
-                <td className="p-1 md:p-4">{historie.diagnosis_date}</td>
-                <td className="p-1 md:p-4">{historie.titer_result}</td>
-                <td className="p-1 md:p-4">{historie.status}</td>
-              </tr>
-            );
-          })}
+              return (
+                <tr key={index} className={`border-gray-100 ${rowColor}`}>
+                  <td className="p-1 md:p-4">{historie.diagnosis_date}</td>
+                  <td className="p-1 md:p-4">{historie.titer_result}</td>
+                  <td className="p-1 md:p-4">{historie.status}</td>
+                </tr>
+              );
+            })
+          ) : (
+            <tr  className={`border-gray-100`}>
+              <td className="p-1 md:p-4"></td>
+              <td className="p-1 md:p-4">Sem dados</td>
+              <td className="p-1 md:p-4"></td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

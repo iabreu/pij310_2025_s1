@@ -106,19 +106,19 @@ const PatientPage = () => {
                 </tr>
                 <tr>
                   <th className="w-[200px] text-left p-2">Titulação Inicial</th>
-                  <td>{patientData?.case_histories[0].titer_result}</td>
+                  <td>{patientData?.status || "Sem estatus"}</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div className="w-full flex items-center gap-4 p-2">
-            <h1 className="font-bold text-lg">Estatus atual: </h1>
+            <h1 className="font-bold text-lg">Status atual:</h1>
             <span
               className={`${statusColor(
                 patientData?.status || "Unknown"
               )} text-center w-fit h-fit px-2.5 py-0.5 rounded-full`}
             >
-              {patientData?.status}
+              {patientData?.status || "Sem estatus"}
             </span>
           </div>
           <Treatment patientData={patientData} />
@@ -129,14 +129,15 @@ const PatientPage = () => {
         <Modal.NewExam
           onOpenChange={setHandleOpenNewExam}
           open={handleOpenNewExam}
-          // @ts-ignore
-          id={id}
+          refetch={refetch}
+          id={id?.toString() || ""}
         />
       )}
       {handleOpenEdit && (
         <Modal.EditPatientData
           onOpenChange={setHandleOpenEdit}
           open={handleOpenEdit}
+          refetch={refetch}
           patientData={patientData}
         />
       )}

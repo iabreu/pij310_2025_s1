@@ -3,28 +3,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { DialogClose } from "@radix-ui/react-dialog";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { statusOptions } from "@/utils/statusList";
-import { NewPatientData } from "@/services/api";
+import { NewPatient } from "@/services/api";
 
 type NewPatientFormProps = {
-  onSubmit: (data: NewPatientData) => void;
+  onSubmit: (data: NewPatient) => void;
 };
 
 const NewPatientForm = ({ onSubmit }: NewPatientFormProps) => {
-  const [formData, setFormData] = useState<NewPatientData>({
+  const [formData, setFormData] = useState<NewPatient>({
     medical_record_number: "",
-    first_exam_date: '',
-    last_exam_date: '',
-    last_case_date: "",
-    status: "",
+    diagnosis_date: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,57 +39,15 @@ const NewPatientForm = ({ onSubmit }: NewPatientFormProps) => {
       </div>
 
       <div>
-        <Label htmlFor="first_exam_date">Data do diagnóstico</Label>
+        <Label htmlFor="diagnosis_date">Data do diagnóstico</Label>
         <Input
-          id="first_exam_date"
-          name="first_exam_date"
+          id="diagnosis_date"
+          name="diagnosis_date"
           type="date"
-          value={formData.first_exam_date}
+          value={formData.diagnosis_date}
           onChange={handleChange}
           required
         />
-      </div>
-
-      <div>
-        <Label htmlFor="last_exam_date">Data do último diagnóstico</Label>
-        <Input
-          id="last_exam_date"
-          name="last_exam_date"
-          type="date"
-          value={formData.last_exam_date}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="last_case_date">Data do último caso</Label>
-        <Input
-          id="last_case_date"
-          name="last_case_date"
-          type="date"
-          value={formData.last_case_date}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="status-select">Status atual</Label>
-        <Select onValueChange={(value) => {
-          setFormData((prev) => ({ ...prev, status: value }));
-        }}>
-          <SelectTrigger id="status-select">
-            <SelectValue placeholder="Estatus atual" />
-          </SelectTrigger>
-          <SelectContent>
-            {statusOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
 
       <div className="flex flex-row-reverse w-full gap-2 ">
