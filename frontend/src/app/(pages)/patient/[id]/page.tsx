@@ -95,7 +95,7 @@ const PatientPage = () => {
             <table className="w-fit flex text-left bg-zinc-700 rounded-md p-2">
               <tbody>
                 <tr className="border-b-2">
-                  <th className="w-[200px] text-left p-2">Proturario</th>
+                  <th className="w-[200px] text-left p-2">Pronturario</th>
                   <td>{patientData?.medical_record_number}</td>
                 </tr>
                 <tr className="border-b-2">
