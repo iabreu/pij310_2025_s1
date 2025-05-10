@@ -305,6 +305,35 @@ def update_patient(
         )
 
 
+@patient_router.delete("/{patient_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_patient(patient_id: int, db: Session = Depends(get_db)):
+    """
+    Delete a patient and all their related case histories.
+    """
+    try:
+        # First check if patient exists
+        db_patient = db.query(Patient).filter(Patient.id == patient_id).first()
+        if db_patient is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Patient not found"
+            )
+
+        # Delete the patient (cascade delete will handle related records)
+        db.delete(db_patient)
+        db.commit()
+        
+        return None  # 204 No Content response
+        
+    except SQLAlchemyError as e:
+        db.rollback()
+        logger.error(f"Database error when deleting patient {patient_id}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Database error occurred when deleting patient. Please try again later."
+        )
+
+
 # SyphilisCaseHistory endpoints
 @case_history_router.get("/{history_id}", response_model=schemas.SyphilisCaseHistory)
 def get_syphilis_case_history(history_id: int, db: Session = Depends(get_db)):

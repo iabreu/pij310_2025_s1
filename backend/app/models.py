@@ -29,7 +29,7 @@ class Patient(Base):
     diagnosis_date = Column(Date)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
-    case_histories = relationship("SyphilisCaseHistory", back_populates="patient")
+    case_histories = relationship("SyphilisCaseHistory", back_populates="patient", cascade="all, delete-orphan")
 
 
 class Profile(Base):
