@@ -70,12 +70,11 @@ export type NewPatientData = {
 };
 
 export type SyphilisCaseProps = {
-  patient_id: string | string[],
-  titer_result: string,
-  diagnosis_date: string,
-  status: string
-}
-
+  patient_id: string | string[];
+  titer_result: string;
+  diagnosis_date: string;
+  status: string;
+};
 
 // API service for patients
 export const patientService = {
@@ -194,9 +193,7 @@ export const caseService = {
   },
 
   // Create a new case
-  createCase: async (
-    caseData: SyphilisCaseProps
-  ): Promise<SyphilisCase> => {
+  createCase: async (caseData: SyphilisCaseProps): Promise<SyphilisCase> => {
     try {
       const response = await fetch(`${API_BASE_URL}/syphilis-case-history/`, {
         method: "POST",
@@ -218,16 +215,19 @@ export const caseService = {
   // Update a case
   updateCase: async (
     id: number,
-    caseData: SyphilisCaseProps
+    caseData: CaseHistoriesProps
   ): Promise<SyphilisCase> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/cases/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(caseData),
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/syphilis-case-history/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(caseData),
+        }
+      );
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }

@@ -1,8 +1,8 @@
 import { PatientDataProps } from "@/services/api";
 
 type ExameControlProps = {
-  patientData?: PatientDataProps | null | undefined
-}
+  patientData?: PatientDataProps | null | undefined;
+};
 
 const ExameControl = ({ patientData }: ExameControlProps) => {
   return (
@@ -37,7 +37,7 @@ const ExameControl = ({ patientData }: ExameControlProps) => {
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};
 
-export default ExameControl
+export default ExameControl;

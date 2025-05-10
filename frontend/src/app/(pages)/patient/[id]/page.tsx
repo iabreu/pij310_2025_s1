@@ -2,13 +2,17 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { PatientDataProps, patientService } from "@/services/api";
+
 import { Modal, Spinner } from "@/components";
+
 import PageLayout from "@/components/PageLayout";
-import { number } from "zod";
+
 import { statusColor } from "@/utils/functions";
 import { Button } from "@/components/ui/button";
-import ExameControl from "./ControlExams";
 import { Edit, PlusSquare } from "lucide-react";
+
+import ExameControl from "./ControlExams";
+import Treatment from "./treatment";
 
 const PatientPage = () => {
   const [patientData, setPatientData] = useState<PatientDataProps | null>(null);
@@ -117,20 +121,7 @@ const PatientPage = () => {
               {patientData?.status}
             </span>
           </div>
-          <div className="w-full flex flex-col justify-center">
-            <h1 className="font-bold text-lg p-2">Tratamento</h1>
-            <table>
-              <tbody>
-                <tr>
-                  {patientData?.case_histories.map((historie, key: number) => (
-                    <td key={key} className="p-2">
-                      {historie.diagnosis_date}
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <Treatment patientData={patientData} />
           <ExameControl patientData={patientData} />
         </section>
       </section>
@@ -146,6 +137,7 @@ const PatientPage = () => {
         <Modal.EditPatientData
           onOpenChange={setHandleOpenEdit}
           open={handleOpenEdit}
+          patientData={patientData}
         />
       )}
     </PageLayout>
