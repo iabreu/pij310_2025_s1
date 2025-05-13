@@ -28,10 +28,6 @@ const ExameControl = ({ patientData }: ExameControlProps) => {
     notes: "",
   });
 
-  const handleToggleNotes = (idx: number) => {
-    setExpandedNotes((prev) => ({ ...prev, [idx]: !prev[idx] }));
-  };
-
   const openTreatmentsModal = (treatments: any[]) => {
     setTreatmentsModal({ open: true, treatments });
   };
@@ -50,7 +46,6 @@ const ExameControl = ({ patientData }: ExameControlProps) => {
 
   return (
     <div className="w-full flex flex-col h-full">
-      {/* Título fixo no topo da div */}
       <h1 className="font-bold text-lg p-2 bg-white dark:bg-neutral-800">
         Histórico
       </h1>
@@ -176,7 +171,6 @@ const ExameControl = ({ patientData }: ExameControlProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Informações adicionais Modal */}
       <Dialog open={infoModal.open} onOpenChange={closeInfoModal}>
         <DialogContent className="max-w-md">
           <DialogHeader>

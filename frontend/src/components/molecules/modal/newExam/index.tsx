@@ -180,7 +180,6 @@ const NewExam = ({ open, onOpenChange, id, refetch }: ModalProps) => {
                         type="button"
                         className="text-red-500 ml-2"
                         onClick={() => removeTreatment(idx)}
-                        disabled={treatments.length === 1}
                       >
                         Remover
                       </button>
