@@ -7,7 +7,7 @@ export type CaseHistoriesProps = {
   diagnosis_date: string;
   titer_result: string;
   status: string;
-  treatments: string | null;
+  treatments: any[] | null;
   notes: string;
   id: string;
   created_at: string;
@@ -80,6 +80,8 @@ export type SyphilisCaseProps = {
   titer_result: string;
   diagnosis_date: string;
   status: string;
+  treatments?: any[];
+  notes?: string;
 };
 
 // API service for patients

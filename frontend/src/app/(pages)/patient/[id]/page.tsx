@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Edit, PlusSquare } from "lucide-react";
 
 import ExameControl from "./ControlExams";
-import Treatment from "./treatment";
 
 const PatientPage = () => {
   const [patientData, setPatientData] = useState<PatientDataProps | null>(null);
@@ -70,27 +69,29 @@ const PatientPage = () => {
 
   return (
     <PageLayout>
-      <section className="w-full h-full">
-        <Button variant={"ghost"} onClick={handleBackHome}>
-          Voltar
-        </Button>
-        <div className="flex md:flex-row flex-col w-full h-ull py-4 text-right justify-center md:justify-end gap-4">
-          <Button
-            onClick={() => setHandleOpenNewExam(true)}
-            className="w-full md:w-auto"
-          >
-            <PlusSquare width={16} className="mr-2" />
-            Adicionar exame
+      <section className="w-full h-screen overflow-hidden flex flex-col">
+        <div>
+          <Button variant={"ghost"} onClick={handleBackHome}>
+            Voltar
           </Button>
-          <Button
-            onClick={() => setHandleOpenEdit(true)}
-            className="w-full md:w-auto"
-          >
-            <Edit width={16} className="mr-2" /> Editar
-          </Button>
+          <div className="flex md:flex-row flex-col w-full py-4 text-right justify-center md:justify-end gap-4">
+            <Button
+              onClick={() => setHandleOpenNewExam(true)}
+              className="w-full md:w-auto"
+            >
+              <PlusSquare width={16} className="mr-2" />
+              Adicionar histórico
+            </Button>
+            <Button
+              onClick={() => setHandleOpenEdit(true)}
+              className="w-full md:w-auto"
+            >
+              <Edit width={16} className="mr-2" /> Editar
+            </Button>
+          </div>
         </div>
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full h-auto">
-          <div className="w-full flex flex-col">
+        <section className="flex flex-col gap-5 w-full flex-1 overflow-hidden">
+          <div className="w-full flex flex-col overflow-auto">
             <h1 className="font-bold text-lg p-2">Acompanhamento individual</h1>
             <table className="w-fit flex text-left bg-zinc-700 rounded-md p-2">
               <tbody>
@@ -126,9 +127,9 @@ const PatientPage = () => {
               </tbody>
             </table>
           </div>
-          <div className="w-full flex items-center gap-4 p-2"></div>
-          <Treatment patientData={patientData} />
-          <ExameControl patientData={patientData} />
+          <div className="w-full flex-1 min-h-0">
+            <ExameControl patientData={patientData} />
+          </div>
         </section>
       </section>
       {handleOpenNewExam && (
