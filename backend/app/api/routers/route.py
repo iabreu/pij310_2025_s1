@@ -179,7 +179,8 @@ def read_patients(
                 "first_exam_date": result.first_exam_date,
                 "last_exam_date": last_exam_date,
                 "last_case_date": last_case_date, # Use determined value
-                "status": calculated_status
+                "status": calculated_status,
+                "latest_titer": result.latest_titer,
             })
 
         return response_data

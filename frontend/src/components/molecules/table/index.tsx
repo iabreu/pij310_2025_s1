@@ -85,6 +85,7 @@ const Table = ({ title, columns, rows, getPatients }: TableProps) => {
                   patientData={row}
                   rowColor={rowColor}
                   refetch={getPatients}
+                  showTiter={true}
                 />
               );
             })

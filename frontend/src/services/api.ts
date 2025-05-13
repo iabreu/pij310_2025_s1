@@ -29,6 +29,7 @@ export type Patient = {
   last_exam_date?: string;
   last_case_date?: string;
   status: string;
+  latest_titer?: string;
 };
 
 export type NewPatient = {

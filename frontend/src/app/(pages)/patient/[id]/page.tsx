@@ -72,7 +72,7 @@ const PatientPage = () => {
     <PageLayout>
       <section className="w-full h-full">
         <Button variant={"ghost"} onClick={handleBackHome}>
-          voltar
+          Voltar
         </Button>
         <div className="flex md:flex-row flex-col w-full h-ull py-4 text-right justify-center md:justify-end gap-4">
           <Button
@@ -95,7 +95,7 @@ const PatientPage = () => {
             <table className="w-fit flex text-left bg-zinc-700 rounded-md p-2">
               <tbody>
                 <tr className="border-b-2">
-                  <th className="w-[200px] text-left p-2">Pronturario</th>
+                  <th className="w-[200px] text-left p-2">Prontuário</th>
                   <td>{patientData?.medical_record_number}</td>
                 </tr>
                 <tr className="border-b-2">
@@ -104,23 +104,29 @@ const PatientPage = () => {
                   </th>
                   <td>{patientData?.diagnosis_date}</td>
                 </tr>
-                <tr>
+                <tr className="border-b-2">
                   <th className="w-[200px] text-left p-2">Titulação Inicial</th>
-                  <td>{patientData?.status || "Sem estatus"}</td>
+                  <td>
+                    {patientData?.case_histories?.[0]?.titer_result ||
+                      "Sem titulação"}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="w-[200px] text-left p-2">Status atual</th>
+                  <td>
+                    <span
+                      className={`${statusColor(
+                        patientData?.status || "Unknown"
+                      )} text-center w-fit h-fit px-2.5 py-0.5 rounded-full`}
+                    >
+                      {patientData?.status || "Sem estatus"}
+                    </span>
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div className="w-full flex items-center gap-4 p-2">
-            <h1 className="font-bold text-lg">Status atual:</h1>
-            <span
-              className={`${statusColor(
-                patientData?.status || "Unknown"
-              )} text-center w-fit h-fit px-2.5 py-0.5 rounded-full`}
-            >
-              {patientData?.status || "Sem estatus"}
-            </span>
-          </div>
+          <div className="w-full flex items-center gap-4 p-2"></div>
           <Treatment patientData={patientData} />
           <ExameControl patientData={patientData} />
         </section>

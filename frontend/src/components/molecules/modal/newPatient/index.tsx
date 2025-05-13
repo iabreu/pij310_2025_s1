@@ -31,8 +31,8 @@ const NewPatient = ({
 
         <div className="space-y-2">
           <NewPatientForm
-            onSubmit={(data) => {
-              patientService.createPatient(data);
+            onSubmit={async (data) => {
+              await patientService.createPatient(data);
               getPatients();
               onOpenChange(false);
             }}

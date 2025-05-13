@@ -72,6 +72,7 @@ const HomePage = () => {
               "Prontuario",
               "Data do Diagnóstico",
               "Status",
+              "Titulação",
               "Ação",
             ]}
             rows={patients}

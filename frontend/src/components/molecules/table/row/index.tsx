@@ -8,9 +8,10 @@ type RowProps = {
   patientData: Patient;
   rowColor: string;
   refetch: Function;
+  showTiter?: boolean;
 };
 
-const Row = ({ patientData, rowColor, refetch }: RowProps) => {
+const Row = ({ patientData, rowColor, refetch, showTiter }: RowProps) => {
   return (
     <tr
       className={`border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-neutral-700/10 ${rowColor}`}
@@ -41,6 +42,11 @@ const Row = ({ patientData, rowColor, refetch }: RowProps) => {
           {patientData.status}
         </span>
       </td>
+      {showTiter && (
+        <td className="py-3 px-4 text-gray-600 dark:text-gray-400">
+          {patientData.latest_titer || "-"}
+        </td>
+      )}
       <td className="py-3 px-4">
         <div className="text-sm flex justify-center items-center p-2 rounded-md hover:bg-slate-700 cursor-pointer">
           <DropdownMenu id={Number(patientData?.id)} refetch={refetch} />

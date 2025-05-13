@@ -36,6 +36,8 @@ class PatientListResponse(BaseModel):
     last_exam_date: Optional[date] = None
     last_case_date: Optional[date] = None
     status: Optional[str] = None
+    latest_titer: Optional[str] = None
+    
 
     class Config:
         from_attributes = True
