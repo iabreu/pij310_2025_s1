@@ -134,28 +134,42 @@ const ExameControl = ({ patientData }: ExameControlProps) => {
 
       {/* Treatments Modal */}
       <Dialog open={treatmentsModal.open} onOpenChange={closeTreatmentsModal}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg dark:bg-neutral-800 dark:text-white">
           <DialogHeader>
             <DialogTitle>Tratamentos</DialogTitle>
           </DialogHeader>
           {Array.isArray(treatmentsModal.treatments) &&
           treatmentsModal.treatments.length > 0 ? (
-            <table className="w-full text-left border-collapse mt-2">
+            <table className="w-full text-left border-collapse mt-2 bg-white dark:bg-neutral-900 dark:text-white">
               <thead>
                 <tr>
-                  <th className="border-b p-2">Nome</th>
-                  <th className="border-b p-2">Data 1</th>
-                  <th className="border-b p-2">Data 2</th>
-                  <th className="border-b p-2">Data 3</th>
+                  <th className="border-b p-2 dark:border-neutral-700">Nome</th>
+                  <th className="border-b p-2 dark:border-neutral-700">
+                    Data 1
+                  </th>
+                  <th className="border-b p-2 dark:border-neutral-700">
+                    Data 2
+                  </th>
+                  <th className="border-b p-2 dark:border-neutral-700">
+                    Data 3
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {treatmentsModal.treatments.map((t, i) => (
                   <tr key={i}>
-                    <td className="p-2">{t.name}</td>
-                    <td className="p-2">{t.date1}</td>
-                    <td className="p-2">{t.date2}</td>
-                    <td className="p-2">{t.date3}</td>
+                    <td className="p-2 border-b dark:border-neutral-700">
+                      {t.name}
+                    </td>
+                    <td className="p-2 border-b dark:border-neutral-700">
+                      {t.date1}
+                    </td>
+                    <td className="p-2 border-b dark:border-neutral-700">
+                      {t.date2}
+                    </td>
+                    <td className="p-2 border-b dark:border-neutral-700">
+                      {t.date3}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -164,23 +178,24 @@ const ExameControl = ({ patientData }: ExameControlProps) => {
             <div>Nenhum tratamento cadastrado.</div>
           )}
           <DialogClose asChild>
-            <button className="mt-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+            <button className="mt-4 px-4 py-2 bg-gray-200 dark:bg-neutral-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-neutral-600">
               Fechar
             </button>
           </DialogClose>
         </DialogContent>
       </Dialog>
 
+      {/* Informações adicionais Modal */}
       <Dialog open={infoModal.open} onOpenChange={closeInfoModal}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md dark:bg-neutral-800 dark:text-white">
           <DialogHeader>
             <DialogTitle>Informações adicionais</DialogTitle>
           </DialogHeader>
-          <div className="whitespace-pre-line break-words p-2 text-base bg-gray-50 rounded max-w-full max-h-[60vh] overflow-y-auto">
+          <div className="whitespace-pre-line break-words p-2 text-base bg-gray-50 dark:bg-neutral-900 rounded max-w-full max-h-[60vh] overflow-y-auto dark:text-white">
             {infoModal.notes}
           </div>
           <DialogClose asChild>
-            <button className="mt-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+            <button className="mt-4 px-4 py-2 bg-gray-200 dark:bg-neutral-700 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-neutral-600">
               Fechar
             </button>
           </DialogClose>
