@@ -102,7 +102,10 @@ const NewExam = ({ open, onOpenChange, id, refetch }: ModalProps) => {
         <DialogDescription>
           Preencha os dados do novo exame abaixo.
         </DialogDescription>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4 p-2 overflow-y-auto max-h-[70vh]"
+        >
           <div>
             <Label htmlFor="status-select">Resultado do exame</Label>
             <Select

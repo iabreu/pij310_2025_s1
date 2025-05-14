@@ -3,13 +3,12 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { PatientDataProps, patientService } from "@/services/api";
 
-import { Modal, Spinner } from "@/components";
+import { Card, Modal, Spinner } from "@/components";
 
 import PageLayout from "@/components/PageLayout";
 
 import { statusColor } from "@/utils/functions";
 import { Button } from "@/components/ui/button";
-import { Edit, PlusSquare } from "lucide-react";
 
 import ExameControl from "./ControlExams";
 
@@ -69,67 +68,43 @@ const PatientPage = () => {
 
   return (
     <PageLayout>
-      <section className="w-full h-screen overflow-hidden flex flex-col">
+      <section className="w-full h-auto overflow-hidden flex flex-col">
         <div>
           <Button variant={"ghost"} onClick={handleBackHome}>
             Voltar
           </Button>
-          <div className="flex md:flex-row flex-col w-full py-4 text-right justify-center md:justify-end gap-4">
-            <Button
-              onClick={() => setHandleOpenNewExam(true)}
-              className="w-full md:w-auto"
-            >
-              <PlusSquare width={16} className="mr-2" />
-              Adicionar histórico
-            </Button>
-            <Button
-              onClick={() => setHandleOpenEdit(true)}
-              className="w-full md:w-auto"
-            >
-              <Edit width={16} className="mr-2" /> Editar
-            </Button>
-          </div>
         </div>
-        <section className="flex flex-col gap-5 w-full flex-1 overflow-hidden">
-          <div className="w-full flex flex-col overflow-auto">
-            <h1 className="font-bold text-lg p-2">Acompanhamento individual</h1>
-            <table className="w-fit flex text-left bg-zinc-700 rounded-md p-2">
-              <tbody>
-                <tr className="border-b-2">
-                  <th className="w-[200px] text-left p-2">Prontuário</th>
-                  <td>{patientData?.medical_record_number}</td>
-                </tr>
-                <tr className="border-b-2">
-                  <th className="w-[200px] text-left p-2">
-                    Data exame Inicial
-                  </th>
-                  <td>{patientData?.diagnosis_date}</td>
-                </tr>
-                <tr className="border-b-2">
-                  <th className="w-[200px] text-left p-2">Titulação Inicial</th>
-                  <td>
-                    {patientData?.case_histories?.[0]?.titer_result ||
-                      "Sem titulação"}
-                  </td>
-                </tr>
-                <tr>
-                  <th className="w-[200px] text-left p-2">Status atual</th>
-                  <td>
-                    <span
-                      className={`${statusColor(
-                        patientData?.status || "Unknown"
-                      )} text-center w-fit h-fit px-2.5 py-0.5 rounded-full`}
-                    >
-                      {patientData?.status || "Sem estatus"}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        <section className="flex flex-col gap-5 w-full flex-1 md:overflow-hidden overflow-y-auto">
+          <div className="flex justify-center gap-4 flex-wrap">
+            <Card
+              title="Prontuário"
+              description={patientData?.medical_record_number || ""}
+            />
+            <Card
+              title="Data exame Inicial"
+              description={patientData?.diagnosis_date || ""}
+            />
+            <Card
+              title="Titulação Inicial"
+              description={
+                patientData?.case_histories?.[0]?.titer_result ||
+                "Sem titulação"
+              }
+            />
+            <Card
+              title="Status atual"
+              description={patientData?.status || "Sem estatus"}
+              contentClass={`${statusColor(
+                patientData?.status || "Unknown"
+              )} text-center w-fit h-fit px-2.5 py-0.5 rounded-full`}
+            />
           </div>
-          <div className="w-full flex-1 min-h-0">
-            <ExameControl patientData={patientData} />
-          </div>
+
+          <ExameControl
+            patientData={patientData}
+            setHandleOpenNewExam={setHandleOpenNewExam}
+            setHandleOpenEdit={setHandleOpenEdit}
+          />
         </section>
       </section>
       {handleOpenNewExam && (

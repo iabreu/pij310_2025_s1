@@ -161,7 +161,7 @@ const EditPatientData = ({
             </DialogFooter>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 p-2 overflow-y-auto max-h-[70vh]">
             <div>
               <Label htmlFor="titer_result">Resultado do exame</Label>
               <Select

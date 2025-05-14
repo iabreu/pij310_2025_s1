@@ -9,16 +9,20 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Eye, Info } from "lucide-react";
+import { Edit, PlusSquare } from "lucide-react";
 
 type ExameControlProps = {
   patientData?: PatientDataProps | null | undefined;
+  setHandleOpenNewExam: (value: boolean) => void;
+  setHandleOpenEdit: (value: boolean) => void;
 };
 
-const ExameControl = ({ patientData }: ExameControlProps) => {
+const ExameControl = ({
+  patientData,
+  setHandleOpenNewExam,
+  setHandleOpenEdit,
+}: ExameControlProps) => {
   const length = patientData?.case_histories?.length ?? 0;
-  const [expandedNotes, setExpandedNotes] = useState<{
-    [key: number]: boolean;
-  }>({});
   const [treatmentsModal, setTreatmentsModal] = useState<{
     open: boolean;
     treatments: any[] | null;
@@ -45,11 +49,26 @@ const ExameControl = ({ patientData }: ExameControlProps) => {
   };
 
   return (
-    <div className="w-full flex flex-col h-full">
-      <h1 className="font-bold text-lg p-2 bg-white dark:bg-neutral-800">
-        Histórico
-      </h1>
-
+    <div className="w-full flex flex-col max-h-[60vh]">
+      <div className="flex bg-white dark:bg-neutral-800 rounded-t-xl items-center justify-between py-2 px-5">
+        <p className="font-bold text-base">Histórico</p>
+        <div className="flex w-full py-2 text-right justify-end gap-4">
+          <Button
+            onClick={() => setHandleOpenNewExam(true)}
+            className="w-fit md:w-auto"
+          >
+            <PlusSquare width={16} className="md:mr-2" />
+            <span className="md:block hidden">Adicionar histórico</span>
+          </Button>
+          <Button
+            onClick={() => setHandleOpenEdit(true)}
+            className="w-fit md:w-auto"
+          >
+            <Edit width={16} className="md:mr-2" />
+            <span className="md:block hidden">Editar</span>
+          </Button>
+        </div>
+      </div>
       <div className="flex-1 overflow-y-auto">
         <table className="w-full text-center border-collapse bg-white dark:bg-neutral-900">
           <thead className="bg-zinc-700 text-white sticky top-0 z-10">
