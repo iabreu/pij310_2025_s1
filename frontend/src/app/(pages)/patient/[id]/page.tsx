@@ -81,11 +81,11 @@ const PatientPage = () => {
               description={patientData?.medical_record_number || ""}
             />
             <Card
-              title="Data exame Inicial"
-              description={patientData?.diagnosis_date || ""}
+              title="Data exame"
+              description={patientData?.case_histories?.[0]?.created_at || ""}
             />
             <Card
-              title="Titulação Inicial"
+              title="Titulação Atual"
               description={
                 patientData?.case_histories?.[0]?.titer_result ||
                 "Sem titulação"
