@@ -82,7 +82,12 @@ const PatientPage = () => {
             />
             <Card
               title="Data exame"
-              description={patientData?.case_histories?.[0]?.created_at || ""}
+              description={
+                //@ts-ignore
+                patientData?.case_histories?.[0]?.created_at.split("T")[0] ||
+                patientData?.diagnosis_date ||
+                ""
+              }
             />
             <Card
               title="Titulação Atual"
