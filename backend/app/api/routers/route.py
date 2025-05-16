@@ -21,7 +21,7 @@ import enum
 class TreatmentStatus(enum.Enum):
     ACTIVE_INFECTION = "Infecção Ativa"
     UNDER_TREATMENT = "Em Tratamento" 
-    MONITORING_CURE = "Monitoramento (Pós-Tratamento)"
+    MONITORING_CURE = "Curado"
     CURED = "Curado"
     REINFECTION = "Reinfecção"
     UNKNOWN = "Desconhecido"
